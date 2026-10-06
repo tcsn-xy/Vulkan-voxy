@@ -1,0 +1,11 @@
+/build/
+/.gradle/
+/.idea/
+/.scratch/
+*.pyc
+__pycache__/
+.DS_Store
+*.jar
+/run/
+/config/
+/logs/

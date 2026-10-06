@@ -1,0 +1,20 @@
+#version 450
+layout(local_size_x=8,local_size_y=8) in;
+layout(set=0,binding=7) uniform sampler2D sourceDepth;
+layout(set=0,binding=9,r32f) uniform writeonly image2D destination;
+layout(set=0,binding=10,std430) readonly buffer Occluders {uint occluderTiles[];};
+layout(push_constant) uniform Reduction {int maskSource;} reduction;
+void main(){
+    ivec2 p=ivec2(gl_GlobalInvocationID.xy),extent=imageSize(destination);
+    if(any(greaterThanEqual(p,extent)))return;
+    ivec2 srcExtent=textureSize(sourceDepth,0)-1,b=p*2;
+    float z=1;
+    ivec2 span=ivec2(p.x==extent.x-1?srcExtent.x+1-b.x:2,p.y==extent.y-1?srcExtent.y+1-b.y:2);
+    for(int y=0;y<span.y;y++)for(int x=0;x<span.x;x++){
+        ivec2 src=clamp(b+ivec2(x,y),ivec2(0),srcExtent);
+        uvec2 tile=uvec2(src*128/(srcExtent+1));uint at=tile.x+tile.y*128u;
+        bool uncertain=reduction.maskSource!=0&&(occluderTiles[at>>5u]&(1u<<(at&31u)))!=0u;
+        z=min(z,uncertain?0.0:texelFetch(sourceDepth,src,0).r);
+    }
+    imageStore(destination,p,vec4(z));
+}

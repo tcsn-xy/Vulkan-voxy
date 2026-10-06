@@ -1,0 +1,139 @@
+#version 450
+#ifdef VOXY_USE_SUBGROUP_BALLOT
+#extension GL_KHR_shader_subgroup_basic : require
+#extension GL_KHR_shader_subgroup_ballot : require
+#endif
+#ifndef VOXY_HIZ_BIAS
+#define VOXY_HIZ_BIAS 3
+#endif
+layout(local_size_x=64) in;
+struct Section {ivec4 origin;uvec4 ranges0;uvec4 ranges1;uvec4 info;};
+layout(set=0,binding=0,std430) readonly buffer Quads {uvec2 quads[];};
+layout(set=0,binding=1,std430) readonly buffer Models {uint modelData[];};
+layout(set=0,binding=8,std430) readonly buffer NearGrid {ivec4 nearOrigin;uint nearCells[];};
+layout(set=0,binding=3,std430) readonly buffer Sections {Section sections[];};
+struct Draw {uint indexCount;uint instanceCount;uint firstIndex;int vertexOffset;uint firstInstance;};
+layout(set=0,binding=4,std430) buffer Commands {Draw draws[];};
+layout(set=0,binding=7) uniform sampler2D hiz;
+layout(set=0,binding=11,std430) buffer Diagnostics {uint stats[];};
+layout(set=0,binding=14,std430) writeonly buffer IndexStream {uvec4 expandedQuads[];};
+layout(push_constant) uniform Frame {mat4 mvp;vec4 camera;uvec4 params;vec4 fog;ivec4 coverage;} frame;
+shared uint starts[8],counts[8],prefixes[8],opaqueBase,transparentBase,rawTransparent,packedOriginXZ,packedOriginY;
+shared bool surviving,probing;
+shared uint rawOpaque,opaqueBucket,batchBase,localCounts[64],localBases[64];
+vec3 axisPoint(uint axis,vec3 v){return axis==0u?v.xzy:(axis==1u?v:v.zxy);}
+bool canRaster(uvec2 q){
+    uint face=q.x&7u,axis=face>>1u,id=(q.x>>26u)|((q.y&1023u)<<6u),fd=modelData[id*16u+face],flags=modelData[id*16u+6u];
+    float scale=float(1<<(packedOriginY>>28u));
+    ivec3 origin=ivec3(int(packedOriginXZ<<16u)>>16,int(packedOriginY<<4u)>>4,int(packedOriginXZ)>>16);
+    uvec2 size=uvec2((q.x>>3u)&15u,(q.x>>7u)&15u)+1u;
+    vec4 bounds=vec4(fd&15u,(fd>>4u)&15u,(fd>>8u)&15u,(fd>>12u)&15u)/16.0+vec4(0,1.0/16.0,0,1.0/16.0);
+    vec2 begin=bounds.xz-vec2(.00005),extent=bounds.yw-begin+vec2(size-1u)+vec2(.00005);
+    float depth=float((fd>>16u)&63u)/64.0;
+    vec3 start=vec3((q.x>>21u)&31u,(q.x>>16u)&31u,(q.x>>11u)&31u);
+    vec3 base=vec3(origin)+(start+axisPoint(axis,vec3(begin,(face&1u)==0u?depth:1.0-depth)))*scale-frame.camera.xyz;
+    float side=axis==0u?base.y:(axis==1u?base.z:base.x);
+    if((flags&16u)==0u&&((face&1u)==0u?side<-.00001:side>.00001))return false;
+    vec4 a=frame.mvp*vec4(base,1),u=frame.mvp[axis==2u?1:0]*(extent.x*scale),v=frame.mvp[axis==1u?1:2]*(extent.y*scale);
+    vec4 b=a+u,c=a+v,d=a+u+v;
+    if(min(min(a.w,b.w),min(c.w,d.w))<=128.0)return true;
+    vec2 lo=min(min(a.xy/a.w,b.xy/b.w),min(c.xy/c.w,d.xy/d.w)),hi=max(max(a.xy/a.w,b.xy/b.w),max(c.xy/c.w,d.xy/d.w));
+    if(any(isnan(lo))||any(isnan(hi))||any(isinf(lo))||any(isinf(hi)))return true;
+    uvec2 viewport=uvec2(uint(nearOrigin.w)&65535u,uint(nearOrigin.w)>>16u);if(any(equal(viewport,uvec2(0))))return true;
+    vec2 p=(lo*.5+.5)*vec2(viewport),r=(hi*.5+.5)*vec2(viewport);
+    vec3 spanWorld=abs(axisPoint(axis,vec3(extent,0))*scale),maximum=abs(base)+spanWorld;
+    vec3 mx=abs(vec3(frame.mvp[0].x,frame.mvp[1].x,frame.mvp[2].x)),my=abs(vec3(frame.mvp[0].y,frame.mvp[1].y,frame.mvp[2].y)),mw=abs(vec3(frame.mvp[0].w,frame.mvp[1].w,frame.mvp[2].w));
+    vec2 error=3.814697265625e-6*(vec2(dot(mx,maximum),dot(my,maximum))+abs(frame.mvp[3].xy));
+    float errorW=3.814697265625e-6*(dot(mw,maximum)+abs(frame.mvp[3].w)),minW=min(min(a.w,b.w),min(c.w,d.w));
+    if(errorW>minW*.1)return true;
+    vec2 guard=max(vec2(.015625),vec2(viewport)*.5*(error+max(abs(lo),abs(hi))*errorW)/(minW-errorW));
+    if(!all(lessThanEqual(ceil(p-vec2(.5)-guard),floor(r-vec2(.5)+guard))))return false;
+    if((frame.params.y&1u)!=0u&&all(greaterThanEqual(lo,vec2(-1)))&&all(lessThanEqual(hi,vec2(1)))){
+        vec2 tLo=(lo*.5+.5)*vec2(textureSize(hiz,0)),tHi=(hi*.5+.5)*vec2(textureSize(hiz,0));
+        int level=clamp(int(ceil(log2(max(max(tHi.x-tLo.x,tHi.y-tLo.y),1.0))))-1,0,textureQueryLevels(hiz)-1);
+        ivec2 low=ivec2(floor(tLo/exp2(float(level)))),high=ivec2(floor(tHi/exp2(float(level)))),limit=textureSize(hiz,level)-1;
+        low=clamp(low,ivec2(0),limit);high=clamp(high,ivec2(0),limit);float z=1.0;
+        for(int y=low.y;y<=high.y;y++)for(int x=low.x;x<=high.x;x++)z=min(z,texelFetch(hiz,ivec2(x,y),level).r);
+        float depth=max(max(max(a.z,.0000001)/a.w,max(b.z,.0000001)/b.w),max(max(c.z,.0000001)/c.w,max(d.z,.0000001)/d.w));
+        if(depth+.0000002<z)return false;
+    }
+    return true;
+}
+void main(){
+    uint thread=gl_LocalInvocationID.x,mode=frame.params.y;
+    if(gl_WorkGroupID.x>=uint(frame.params.w))return;
+    uint id=uint(frame.params.z)+gl_WorkGroupID.x;
+    if(thread==0u){
+        Section section=sections[id];probing=(section.info.z&1u)!=0u;float scale=float(1<<section.origin.w);uint box=section.info.y;
+        vec3 offset=vec3(box&31u,(box>>5u)&31u,(box>>10u)&31u)*scale;
+        vec3 span=vec3(((box>>15u)&31u)+1u,((box>>20u)&31u)+1u,((box>>25u)&31u)+1u)*scale;
+        vec3 lo=vec3(section.origin.xyz)+offset-frame.camera.xyz-vec3(.002*scale),hi=lo+span+vec3(.004*scale);
+        bool visible=true,behind=false;vec2 ndcLo=vec2(1e20),ndcHi=vec2(-1e20);float closest=0;
+        uint reject[5]=uint[5](0,0,0,0,0);
+        for(uint i=0u;i<8u;i++){
+            vec3 corner=mix(lo,hi,bvec3((i&1u)!=0u,(i&2u)!=0u,(i&4u)!=0u));vec4 p=frame.mvp*vec4(corner,1);
+            reject[0]+=uint(p.x < -p.w);reject[1]+=uint(p.x>p.w);reject[2]+=uint(p.y < -p.w);reject[3]+=uint(p.y>p.w);reject[4]+=uint(p.z>p.w);
+            behind=behind||p.w<=0;vec3 ndc=p.xyz/max(p.w,.00001);ndcLo=min(ndcLo,ndc.xy);ndcHi=max(ndcHi,ndc.xy);closest=max(closest,ndc.z);
+        }
+        for(uint i=0u;i<5u;i++)if(reject[i]==8u)visible=false;
+        vec3 nearest=max(max(lo,-hi),vec3(0));if(dot(nearest.xz,nearest.xz)>uintBitsToFloat(frame.params.x)*uintBitsToFloat(frame.params.x))visible=false;
+        if(visible&&(mode&1u)!=0u&&!behind&&all(greaterThanEqual(ndcLo,vec2(-1)))&&all(lessThanEqual(ndcHi,vec2(1)))){
+            vec2 a=(ndcLo*.5+.5)*vec2(textureSize(hiz,0)),b=(ndcHi*.5+.5)*vec2(textureSize(hiz,0));
+            int level=clamp(int(ceil(log2(max(max(b.x-a.x,b.y-a.y),1.0))))-VOXY_HIZ_BIAS,0,textureQueryLevels(hiz)-1);
+            ivec2 t0=ivec2(floor(a/exp2(float(level)))),t1=ivec2(floor(b/exp2(float(level))));ivec2 extent=textureSize(hiz,level)-1;t0=clamp(t0,ivec2(0),extent);t1=clamp(t1,ivec2(0),extent);
+            float z=1.0;for(int y=t0.y;y<=t1.y;y++)for(int x=t0.x;x<=t1.x;x++)z=min(z,texelFetch(hiz,ivec2(x,y),level).r);
+            if((section.info.z&1u)!=0u){atomicAdd(stats[4],1u);atomicAdd(stats[5],uint(z>0));atomicAdd(stats[6],uint(closest+0.0000002<z));}
+            if(closest+0.0000002<z)visible=false;
+        }
+        if((section.info.z&1u)!=0u){atomicAdd(stats[0],1u);atomicAdd(stats[1],uint(visible));atomicAdd(stats[2],uint((mode&1u)!=0u));atomicAdd(stats[3],uint(behind));}
+        uint offsets[9]=uint[9](section.ranges0.x,section.ranges0.y,section.ranges0.z,section.ranges0.w,section.ranges1.x,section.ranges1.y,section.ranges1.z,section.ranges1.w,section.info.x);
+        uint opaqueCount=0;
+        for(uint group=0u;group<8u;group++){
+            bool facing=true;
+            if(group>=2u){uint face=group-2u,axis=face>>1u;float low=axis==0u?lo.y:(axis==1u?lo.z:lo.x),high=axis==0u?hi.y:(axis==1u?hi.z:hi.x);facing=(face&1u)==0u?high>=0:low<=0;}
+            starts[group]=offsets[group];counts[group]=visible&&facing?offsets[group+1u]-offsets[group]:0u;
+            prefixes[group]=opaqueCount;if(group!=0u)opaqueCount+=counts[group];
+        }
+        if(probing)atomicAdd(stats[7],(mode&8u)!=0u?counts[0]:opaqueCount+counts[0]);
+        surviving=visible;
+        if((mode&4u)!=0u){
+            uint at=id,total=mode>>8u;uint begin=offsets[1],end=offsets[8];
+            if((mode&2u)!=0u){draws[at]=Draw((end-begin)*6u,uint(visible),begin*6u,0,0u);draws[total+at]=Draw((offsets[1]-offsets[0])*6u,uint(visible),offsets[0]*6u,0,0u);}
+            else{draws[at]=Draw((end-begin)*6u,uint(visible),0u,int(begin*4u),0u);draws[total+at]=Draw((offsets[1]-offsets[0])*6u,uint(visible),0u,int(offsets[0]*4u),0u);}
+        }else{
+            uint bucket=section.info.w&1u;rawOpaque=opaqueCount;opaqueBucket=bucket;
+            opaqueBase=(mode&8u)==0u&&opaqueCount>0u?uint(draws[bucket].vertexOffset)+atomicAdd(draws[bucket].instanceCount,opaqueCount):0u;
+            transparentBase=section.info.z>>1u;rawTransparent=offsets[1]-offsets[0];
+            packedOriginXZ=(uint(section.origin.x)&65535u)|(uint(section.origin.z)<<16u);packedOriginY=(uint(section.origin.y)&0x0fffffffu)|(uint(section.origin.w)<<28u);
+        }
+    }
+    if((mode&4u)!=0u)return;
+    barrier();
+    for(uint q=thread;q<rawTransparent;q+=64u){
+        uvec2 raw=quads[starts[0]+q];if(!surviving||((mode&8u)!=0u&&!canRaster(raw)))raw.y|=0x80000000u;
+        expandedQuads[transparentBase+q]=uvec4(raw,packedOriginXZ,packedOriginY);
+    }
+    if(!surviving)return;
+    if((mode&8u)==0u){
+        for(uint group=1u;group<8u;group++)for(uint q=thread;q<counts[group];q+=64u)expandedQuads[opaqueBase+prefixes[group]+q]=uvec4(quads[starts[group]+q],packedOriginXZ,packedOriginY);
+        return;
+    }
+    for(uint batch=0u;batch<rawOpaque;batch+=64u){
+        uint candidate=batch+thread;bool alive=false;uvec2 raw=uvec2(0);
+        if(candidate<rawOpaque){uint group=1u;while(group<7u&&candidate>=prefixes[group]+counts[group])group++;raw=quads[starts[group]+candidate-prefixes[group]];alive=canRaster(raw);}
+        #ifdef VOXY_USE_SUBGROUP_BALLOT
+        uvec4 mask=subgroupBallot(alive);uint rank=subgroupBallotExclusiveBitCount(mask);
+        if(subgroupElect())localCounts[gl_SubgroupID]=subgroupBallotBitCount(mask);
+        barrier();
+        if(thread==0u){uint total=0u;for(uint s=0u;s<gl_NumSubgroups;s++){localBases[s]=total;total+=localCounts[s];}if(probing)atomicAdd(stats[7],total);batchBase=total>0u?uint(draws[opaqueBucket].vertexOffset)+atomicAdd(draws[opaqueBucket].instanceCount,total):0u;}
+        barrier();
+        if(alive)expandedQuads[batchBase+localBases[gl_SubgroupID]+rank]=uvec4(raw,packedOriginXZ,packedOriginY);
+        #else
+        localCounts[thread]=uint(alive);barrier();
+        if(thread==0u){uint total=0u;for(uint s=0u;s<64u;s++){localBases[s]=total;total+=localCounts[s];}if(probing)atomicAdd(stats[7],total);batchBase=total>0u?uint(draws[opaqueBucket].vertexOffset)+atomicAdd(draws[opaqueBucket].instanceCount,total):0u;}
+        barrier();
+        if(alive)expandedQuads[batchBase+localBases[thread]]=uvec4(raw,packedOriginXZ,packedOriginY);
+        #endif
+        barrier();
+    }
+}
