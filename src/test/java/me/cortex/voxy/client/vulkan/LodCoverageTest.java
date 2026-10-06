@@ -22,6 +22,11 @@ class LodCoverageTest {
             assertTrue(selected.size()<=Math.max(limit,roots.size()));assertCoverage(selected,192);
         }
     }
+    @Test void saturatedFrontierDoesNotRequestNewChildMeshes(){
+        var requested=new java.util.concurrent.atomic.AtomicInteger();var root=new Tile(0,64);
+        var selected=LodCoverage.select(List.of(root),1,t->t.length(),t->{requested.incrementAndGet();return children(t);},t->2);
+        assertEquals(List.of(root),selected);assertEquals(0,requested.get());
+    }
     @Test void missingChildrenKeepTheParent(){
         var root=new Tile(0,64);
         var selected=LodCoverage.select(List.of(root),100,t->t.length(),t->t.length()==16?null:children(t));

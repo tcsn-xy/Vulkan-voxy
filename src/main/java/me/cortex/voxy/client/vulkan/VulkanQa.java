@@ -38,6 +38,31 @@ public final class VulkanQa {
         command(mc,"tp VulkanVoxyQA "+camera[0]+" "+camera[1]+" "+camera[2]+" "+yaw+" "+camera[4]);
         Logger.info("VULKAN_QA_DENSE_VIEW phase="+phase+" yaw="+yaw);
     }
+    private static long[] turnSelection;
+    private static long turnBuilds;
+    private static int turnChecks;
+    private static boolean turnIngestStopped;
+    private static void rapidTurns(Minecraft mc,double seconds){
+        var r=VulkanVoxyRenderer.current;if(r==null)return;
+        if(seconds>=30&&!turnIngestStopped){me.cortex.voxy.client.config.VoxyConfig.CONFIG.ingestEnabled=false;turnIngestStopped=true;}
+        if(turnSelection==null&&seconds>=40&&r.meshService.pending()==0){turnSelection=r.meshService.selected.clone();turnBuilds=r.meshService.meshBuilds.get();Logger.info("VULKAN_QA_TURNS_READY tiles="+turnSelection.length+" builds="+turnBuilds);}
+        if(turnSelection==null){if(seconds>80)throw new IllegalStateException("Radial working set did not finish warming");return;}
+        if(!java.util.Arrays.equals(turnSelection,r.meshService.selected)||turnBuilds!=r.meshService.meshBuilds.get())throw new IllegalStateException("Turning rebuilt or changed the warm radial working set");
+        var camera=System.getProperty("voxy.qa.camera").split(" ");float yaw=Float.parseFloat(camera[3]);
+        mc.player.setYRot(yaw+switch(turnChecks++%4){case 0->180;case 1->0;case 2->270;default->90;});
+        mc.player.setXRot(Float.parseFloat(camera[4]));
+        if(turnChecks%100==0)Logger.info("VULKAN_QA_TURNS_CHECKED "+turnChecks+" builds="+turnBuilds);
+    }
+    private static int lifecycleStep;
+    private static void lifecycle(Minecraft mc,double seconds){
+        if(seconds>=20&&lifecycleStep==0){mc.getWindow().setWindowed(1720,720);lifecycleStep++;}
+        if(seconds>=35&&lifecycleStep==1){mc.getWindow().setWindowed(3440,1440);lifecycleStep++;}
+        if(seconds>=50&&lifecycleStep==2){reload=mc.reloadResourcePacks();lifecycleStep++;}
+        if(seconds>=85&&lifecycleStep==3&&reload!=null&&reload.isDone()){
+            var cfg=me.cortex.voxy.client.config.VoxyConfig.CONFIG;cfg.enableRendering=false;me.cortex.voxy.client.config.VoxyConfig.applyVulkanSettings();cfg.enableRendering=true;me.cortex.voxy.client.config.VoxyConfig.applyVulkanSettings();lifecycleStep++;
+        }
+        if(seconds>=125&&lifecycleStep==4){var r=VulkanVoxyRenderer.current;if(r==null||r.drawnQuads==0||r.budget.used()>r.budget.limit())throw new IllegalStateException("Lifecycle did not recover valid geometry");lifecycleStep++;Logger.info("VULKAN_QA_LIFECYCLE_VERIFIED resize=true resources=true restart=true");}
+    }
     private static void features(Minecraft mc,double seconds){
         if(seconds>=25)step(mc,0,"flight",()->command(mc,"tp VulkanVoxyQA 512 180 512 -135 60"));
         if(seconds>=50)step(mc,1,"turn",()->command(mc,"tp VulkanVoxyQA 512 180 512 45 35"));
@@ -86,13 +111,14 @@ public final class VulkanQa {
             long fill=r.budget.remaining()-512*1024;
             if(fill<=0)throw new IllegalStateException("No GPU headroom for pressure fixture");
             pressureAllocation=new VulkanBuffer(r.budget,fill,org.lwjgl.vulkan.VK10.VK_BUFFER_USAGE_STORAGE_BUFFER_BIT,false);
-            r.deferRefinements();pressureStep=1;Logger.info("VULKAN_QA_PRESSURE filled GPU budget, coarse coverage requested");
+            r.deferRefinements();pressureStep=1;Logger.info("VULKAN_QA_PRESSURE filled GPU budget, gradual coarsening requested");
         }
         if(seconds>=40&&pressureStep==1){
-            if(!r.geometryPressure()||!r.meshService.coarseSelection||r.drawnSections==0)throw new IllegalStateException("Coarse GPU pressure coverage failed");
-            for(long key:r.meshService.selected)if(me.cortex.voxy.common.world.WorldEngine.getLevel(key)!=me.cortex.voxy.common.world.WorldEngine.MAX_LOD_LAYER)throw new IllegalStateException("Pressure selection still contains fine nodes");
+            if(!r.geometryPressure()||r.drawnSections==0)throw new IllegalStateException("Coarse GPU pressure coverage failed");
+            boolean fine=false;for(long key:r.meshService.selected)fine|=me.cortex.voxy.common.world.WorldEngine.getLevel(key)<me.cortex.voxy.common.world.WorldEngine.MAX_LOD_LAYER;
+            if(!fine)throw new IllegalStateException("Pressure discarded every refined tile");
             if(r.budget.used()>r.budget.limit())throw new IllegalStateException("Memory budget exceeded");
-            pressureStep=2;Logger.info("VULKAN_QA_PRESSURE coarse coverage retained under GPU pressure");
+            pressureStep=2;Logger.info("VULKAN_QA_PRESSURE near refinements and full coverage retained under GPU pressure");
         }
         if(seconds>=65&&pressureStep==2){pressureAllocation.close();pressureAllocation=null;pressureStep=3;Logger.info("VULKAN_QA_PRESSURE allocation retired");}
         if(seconds>=90&&pressureStep==3){
@@ -136,7 +162,7 @@ public final class VulkanQa {
             if(mc.player.getAbilities().mayfly&&!mc.player.getAbilities().flying){mc.player.getAbilities().flying=true;mc.player.onUpdateAbilities();}
             double elapsed=(now-started)/1e9;
             if(elapsed>=10&&!texturesVerified){var camera=mc.gameRenderer.gameRenderState().levelRenderState.cameraRenderState;Logger.info("VULKAN_QA_CAMERA pos="+camera.pos+" pitch="+camera.xRot+" yaw="+camera.yRot+" fog="+camera.fogType+" nearFogStart="+camera.fogData.renderDistanceStart+" focus="+mc.getWindow().isFocused());verifyTextures();texturesVerified=true;}
-            String scenario=System.getProperty("voxy.qa.scenario","static");if(scenario.equals("dense"))denseViews(mc,elapsed);if(scenario.equals("features"))features(mc,elapsed);if(scenario.equals("stability"))route(mc,elapsed);if(scenario.equals("imports"))checkpointTest(mc,elapsed);if(scenario.equals("budget"))pressureTest(elapsed);
+            String scenario=System.getProperty("voxy.qa.scenario","static");if(scenario.equals("lifecycle"))lifecycle(mc,elapsed);if(scenario.equals("refresh"))RefreshQa.tick(mc,elapsed);if(scenario.equals("turns"))rapidTurns(mc,elapsed);if(scenario.equals("dense"))denseViews(mc,elapsed);if(scenario.equals("features"))features(mc,elapsed);if(scenario.equals("stability"))route(mc,elapsed);if(scenario.equals("imports"))checkpointTest(mc,elapsed);if(scenario.equals("budget"))pressureTest(elapsed);
             if(scenario.equals("settings")&&elapsed>=45&&featureStep==1){
                 var renderer=VulkanVoxyRenderer.current;
                 if(renderer==null||renderer.budget.used()>renderer.budget.limit())throw new IllegalStateException("Settings restart did not recover a valid Vulkan renderer");
@@ -157,7 +183,7 @@ public final class VulkanQa {
                 instance.getImportManager().makeAndRunIfNone(engine,()->{var importer=new WorldImporter(engine,mc.level,instance.getServiceManager(),instance.savingServiceRateLimiter);importer.importRegionDirectoryAsync(region.toFile());return importer;});importing=true;
             }
             if(elapsed>20&&now-lastScreenshot>30_000_000_000L){Screenshot.grab(mc.gameDirectory,"qa-"+(int)elapsed+".png",mc.gameRenderer.mainRenderTarget(),1,c->Logger.info(c.getString()));lastScreenshot=now;}
-            if(elapsed>=seconds){if(scenario.equals("settings")&&featureStep!=2)throw new IllegalStateException("Settings recovery QA incomplete");if(scenario.equals("imports")&&checkpointStep!=4)throw new IllegalStateException("Import checkpoint QA incomplete");if(scenario.equals("features")&&featureStep!=17)throw new IllegalStateException("Feature QA incomplete");if(scenario.equals("budget")&&pressureStep!=4)throw new IllegalStateException("Budget QA incomplete");if(System.getProperty("voxy.qa.backend","vulkan").equals("opengl")&&VulkanVoxyRenderer.current!=null)throw new IllegalStateException("Vulkan Voxy did not disable itself on OpenGL");ended=true;
+            if(elapsed>=seconds){if(scenario.equals("lifecycle")&&lifecycleStep!=5)throw new IllegalStateException("Lifecycle QA incomplete");if(scenario.equals("refresh")&&!RefreshQa.complete())throw new IllegalStateException("Refresh QA incomplete");if(scenario.equals("turns")&&turnChecks<100)throw new IllegalStateException("Rapid turn QA incomplete");if(scenario.equals("settings")&&featureStep!=2)throw new IllegalStateException("Settings recovery QA incomplete");if(scenario.equals("imports")&&checkpointStep!=4)throw new IllegalStateException("Import checkpoint QA incomplete");if(scenario.equals("features")&&featureStep!=17)throw new IllegalStateException("Feature QA incomplete");if(scenario.equals("budget")&&pressureStep!=4)throw new IllegalStateException("Budget QA incomplete");if(System.getProperty("voxy.qa.backend","vulkan").equals("opengl")&&VulkanVoxyRenderer.current!=null)throw new IllegalStateException("Vulkan Voxy did not disable itself on OpenGL");ended=true;
                 try{if(frames!=null){frames.close();frames=null;}}catch(IOException e){throw new UncheckedIOException(e);}
                 if(gameTiming!=null){gameTiming.close();gameTiming=null;}
                 Logger.info("VULKAN_QA_COMPLETE seconds="+elapsed);mc.stop();

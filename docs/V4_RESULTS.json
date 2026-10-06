@@ -1,0 +1,2297 @@
+[
+  {
+    "name": "v4-release-turn104",
+    "exit": {
+      "exit_code": 0
+    },
+    "artifact": {
+      "name": "voxy-vulkan-0.2.20-vulkan.4+mc26.3-8bc3411.jar",
+      "sha256": "31a027fa335757dc6fbaabedbdccff5afdf1bb400358543993823130d6f88c3c"
+    },
+    "samples": 3264,
+    "duration": 109.977082625,
+    "focused_samples": 0,
+    "pressure_samples": 0,
+    "heap_windows": {
+      "0": {
+        "heap_min": 558698144,
+        "heap_peak": 1216613688,
+        "gpu_peak": 304872308,
+        "samples": 3264
+      }
+    },
+    "gc_count": 29,
+    "gc_ms": 340,
+    "fields": {
+      "frame_ms": {
+        "p50": 33.470667,
+        "p95": 35.904958,
+        "p99": 39.252292,
+        "peak": 72.360083
+      },
+      "lod_cpu_ms": {
+        "p50": 6.739291,
+        "p95": 9.819875,
+        "p99": 12.808,
+        "peak": 47.291999999999994
+      },
+      "lod_gpu_ms": {
+        "p50": 0.681876,
+        "p95": 1.037959,
+        "p99": 1.2217500000000001,
+        "peak": 1.4791260000000002
+      },
+      "game_render_cpu_ms": {
+        "p50": 7.446125,
+        "p95": 11.327333,
+        "p99": 14.899,
+        "peak": 48.332916
+      },
+      "game_render_gpu_ms": {
+        "p50": 8.590042,
+        "p95": 11.680125,
+        "p99": 13.044041,
+        "peak": 15.945541
+      },
+      "heap_used": {
+        "p50": 948488712.0,
+        "p95": 1167202776.0,
+        "p99": 1197739320.0,
+        "peak": 1216613688.0
+      },
+      "gpu_bytes": {
+        "p50": 298088792.0,
+        "p95": 298088792.0,
+        "p99": 298088792.0,
+        "peak": 304872308.0
+      },
+      "data_payload_bytes": {
+        "p50": 70261272.0,
+        "p95": 70261272.0,
+        "p99": 70261272.0,
+        "peak": 70261272.0
+      },
+      "geometry_pending_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "direct_buffer_bytes": {
+        "p50": 5766973.0,
+        "p95": 6968125.0,
+        "p99": 7168317.0,
+        "peak": 7168317.0
+      },
+      "mapped_buffer_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "database_cache_bytes": {
+        "p50": 56033850.0,
+        "p95": 56033850.0,
+        "p99": 56033850.0,
+        "peak": 56033850.0
+      },
+      "database_memtable_bytes": {
+        "p50": 1311155.0,
+        "p95": 1311155.0,
+        "p99": 1311155.0,
+        "peak": 1311155.0
+      }
+    },
+    "rss_peak_kib": 1655648.0,
+    "phys_footprint_peak_bytes": 3428700096.0,
+    "diagnostics": {
+      "OutOfMemoryError": 0,
+      "Invalid Metal usage": 0,
+      "Vulkan mesh build failed": 0,
+      "Memory budget exceeded": 0,
+      "QA window unexpectedly became visible": 0,
+      "failed assertion": 0
+    },
+    "spec": {
+      "mode": "render",
+      "scenario": "turns",
+      "backend": "vulkan",
+      "distance": 172,
+      "near_distance": 8,
+      "seconds": 110,
+      "width": 3440,
+      "height": 1440,
+      "legacy_fog": false,
+      "legacy_coverage": false,
+      "subdivision": 104.0,
+      "threads": 2,
+      "gpu_budget_mib": 768,
+      "hiz_enabled": false,
+      "auto_import": false,
+      "background": true,
+      "work_cadence_fps": 30,
+      "metal_validation": false
+    },
+    "performance_status": "functional verification only; no FPS comparison"
+  },
+  {
+    "name": "v4-release-turn64",
+    "exit": {
+      "exit_code": 0
+    },
+    "artifact": {
+      "name": "voxy-vulkan-0.2.20-vulkan.4+mc26.3-8bc3411.jar",
+      "sha256": "31a027fa335757dc6fbaabedbdccff5afdf1bb400358543993823130d6f88c3c"
+    },
+    "samples": 3272,
+    "duration": 110.029126542,
+    "focused_samples": 0,
+    "pressure_samples": 0,
+    "heap_windows": {
+      "0": {
+        "heap_min": 519709928,
+        "heap_peak": 1178759848,
+        "gpu_peak": 303216824,
+        "samples": 3272
+      }
+    },
+    "gc_count": 30,
+    "gc_ms": 315,
+    "fields": {
+      "frame_ms": {
+        "p50": 33.478084,
+        "p95": 35.811291,
+        "p99": 38.331,
+        "peak": 67.395458
+      },
+      "lod_cpu_ms": {
+        "p50": 6.930834,
+        "p95": 9.461083,
+        "p99": 13.644708,
+        "peak": 25.912832999999996
+      },
+      "lod_gpu_ms": {
+        "p50": 0.668374,
+        "p95": 1.034708,
+        "p99": 1.299917,
+        "peak": 4.064917
+      },
+      "game_render_cpu_ms": {
+        "p50": 7.592875,
+        "p95": 10.86375,
+        "p99": 15.615583,
+        "peak": 37.272625
+      },
+      "game_render_gpu_ms": {
+        "p50": 8.619958,
+        "p95": 11.888042,
+        "p99": 13.624459,
+        "peak": 56.841417
+      },
+      "heap_used": {
+        "p50": 920286648.0,
+        "p95": 1130001848.0,
+        "p99": 1163556280.0,
+        "peak": 1178759848.0
+      },
+      "gpu_bytes": {
+        "p50": 298485200.0,
+        "p95": 298485200.0,
+        "p99": 298485200.0,
+        "peak": 303216824.0
+      },
+      "data_payload_bytes": {
+        "p50": 68420520.0,
+        "p95": 68420520.0,
+        "p99": 68420520.0,
+        "peak": 68420520.0
+      },
+      "geometry_pending_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "direct_buffer_bytes": {
+        "p50": 5619517.0,
+        "p95": 6820669.0,
+        "p99": 7086397.0,
+        "peak": 7086397.0
+      },
+      "mapped_buffer_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "database_cache_bytes": {
+        "p50": 56050593.0,
+        "p95": 56050593.0,
+        "p99": 56050593.0,
+        "peak": 56050593.0
+      },
+      "database_memtable_bytes": {
+        "p50": 1311155.0,
+        "p95": 1311155.0,
+        "p99": 1311155.0,
+        "peak": 1311155.0
+      }
+    },
+    "rss_peak_kib": 1753792.0,
+    "phys_footprint_peak_bytes": 3606171560.0,
+    "diagnostics": {
+      "OutOfMemoryError": 0,
+      "Invalid Metal usage": 0,
+      "Vulkan mesh build failed": 0,
+      "Memory budget exceeded": 0,
+      "QA window unexpectedly became visible": 0,
+      "failed assertion": 0
+    },
+    "spec": {
+      "mode": "render",
+      "scenario": "turns",
+      "backend": "vulkan",
+      "distance": 172,
+      "near_distance": 8,
+      "seconds": 110,
+      "width": 3440,
+      "height": 1440,
+      "legacy_fog": false,
+      "legacy_coverage": false,
+      "subdivision": 64.0,
+      "threads": 2,
+      "gpu_budget_mib": 768,
+      "hiz_enabled": true,
+      "auto_import": false,
+      "background": true,
+      "work_cadence_fps": 30,
+      "metal_validation": false
+    },
+    "performance_status": "functional verification only; no FPS comparison"
+  },
+  {
+    "name": "v4-release-turn28",
+    "exit": {
+      "exit_code": 0
+    },
+    "artifact": {
+      "name": "voxy-vulkan-0.2.20-vulkan.4+mc26.3-8bc3411.jar",
+      "sha256": "31a027fa335757dc6fbaabedbdccff5afdf1bb400358543993823130d6f88c3c"
+    },
+    "samples": 3276,
+    "duration": 110.020796458,
+    "focused_samples": 0,
+    "pressure_samples": 0,
+    "heap_windows": {
+      "0": {
+        "heap_min": 530192064,
+        "heap_peak": 1178283208,
+        "gpu_peak": 296610452,
+        "samples": 3276
+      }
+    },
+    "gc_count": 27,
+    "gc_ms": 237,
+    "fields": {
+      "frame_ms": {
+        "p50": 33.482916,
+        "p95": 35.583292,
+        "p99": 37.989458,
+        "peak": 83.264791
+      },
+      "lod_cpu_ms": {
+        "p50": 6.827626,
+        "p95": 9.187251000000002,
+        "p99": 12.652249,
+        "peak": 16.935457
+      },
+      "lod_gpu_ms": {
+        "p50": 0.672375,
+        "p95": 1.0259999999999998,
+        "p99": 1.240125,
+        "peak": 1.672583
+      },
+      "game_render_cpu_ms": {
+        "p50": 7.488,
+        "p95": 10.206375,
+        "p99": 15.162167,
+        "peak": 57.276083
+      },
+      "game_render_gpu_ms": {
+        "p50": 8.599792,
+        "p95": 11.506875,
+        "p99": 13.070708,
+        "peak": 17.14925
+      },
+      "heap_used": {
+        "p50": 904384864.0,
+        "p95": 1130011856.0,
+        "p99": 1161334496.0,
+        "peak": 1178283208.0
+      },
+      "gpu_bytes": {
+        "p50": 292553804.0,
+        "p95": 292553804.0,
+        "p99": 292553804.0,
+        "peak": 296610452.0
+      },
+      "data_payload_bytes": {
+        "p50": 68946088.0,
+        "p95": 68946088.0,
+        "p99": 68946088.0,
+        "peak": 68946088.0
+      },
+      "geometry_pending_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "direct_buffer_bytes": {
+        "p50": 5521213.0,
+        "p95": 6722365.0,
+        "p99": 6922557.0,
+        "peak": 6922557.0
+      },
+      "mapped_buffer_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "database_cache_bytes": {
+        "p50": 56218475.0,
+        "p95": 56218475.0,
+        "p99": 56218475.0,
+        "peak": 56218475.0
+      },
+      "database_memtable_bytes": {
+        "p50": 1311155.0,
+        "p95": 1311155.0,
+        "p99": 1311155.0,
+        "peak": 1311155.0
+      }
+    },
+    "rss_peak_kib": 1845088.0,
+    "phys_footprint_peak_bytes": 3407335408.0,
+    "diagnostics": {
+      "OutOfMemoryError": 0,
+      "Invalid Metal usage": 0,
+      "Vulkan mesh build failed": 0,
+      "Memory budget exceeded": 0,
+      "QA window unexpectedly became visible": 0,
+      "failed assertion": 0
+    },
+    "spec": {
+      "mode": "render",
+      "scenario": "turns",
+      "backend": "vulkan",
+      "distance": 172,
+      "near_distance": 8,
+      "seconds": 110,
+      "width": 3440,
+      "height": 1440,
+      "legacy_fog": false,
+      "legacy_coverage": false,
+      "subdivision": 28.0,
+      "threads": 4,
+      "gpu_budget_mib": 768,
+      "hiz_enabled": true,
+      "auto_import": false,
+      "background": true,
+      "work_cadence_fps": 30,
+      "metal_validation": false
+    },
+    "performance_status": "functional verification only; no FPS comparison"
+  },
+  {
+    "name": "v4-release-refresh",
+    "exit": {
+      "exit_code": 0
+    },
+    "artifact": {
+      "name": "voxy-vulkan-0.2.20-vulkan.4+mc26.3-8bc3411.jar",
+      "sha256": "31a027fa335757dc6fbaabedbdccff5afdf1bb400358543993823130d6f88c3c"
+    },
+    "samples": 4462,
+    "duration": 149.992249416,
+    "focused_samples": 0,
+    "pressure_samples": 0,
+    "heap_windows": {
+      "0": {
+        "heap_min": 523986480,
+        "heap_peak": 1215480720,
+        "gpu_peak": 296463368,
+        "samples": 4462
+      }
+    },
+    "gc_count": 73,
+    "gc_ms": 766,
+    "fields": {
+      "frame_ms": {
+        "p50": 33.524,
+        "p95": 36.044583,
+        "p99": 37.386125,
+        "peak": 69.988625
+      },
+      "lod_cpu_ms": {
+        "p50": 0.072625,
+        "p95": 0.140709,
+        "p99": 0.23583400000000002,
+        "peak": 7.311833
+      },
+      "lod_gpu_ms": {
+        "p50": 0.68725,
+        "p95": 1.0055420000000002,
+        "p99": 1.208667,
+        "peak": 1.7609169999999998
+      },
+      "game_render_cpu_ms": {
+        "p50": 1.105875,
+        "p95": 2.012542,
+        "p99": 2.970959,
+        "peak": 34.756417
+      },
+      "game_render_gpu_ms": {
+        "p50": 9.128125,
+        "p95": 11.089292,
+        "p99": 12.646083,
+        "peak": 16.742875
+      },
+      "heap_used": {
+        "p50": 966862968.0,
+        "p95": 1191258232.0,
+        "p99": 1210249928.0,
+        "peak": 1215480720.0
+      },
+      "gpu_bytes": {
+        "p50": 292886332.0,
+        "p95": 292886332.0,
+        "p99": 292886332.0,
+        "peak": 292886332.0
+      },
+      "data_payload_bytes": {
+        "p50": 71033112.0,
+        "p95": 71033112.0,
+        "p99": 72445272.0,
+        "peak": 79668256.0
+      },
+      "geometry_pending_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 10040.0
+      },
+      "direct_buffer_bytes": {
+        "p50": 6289213.0,
+        "p95": 8822589.0,
+        "p99": 9022781.0,
+        "peak": 9091901.0
+      },
+      "mapped_buffer_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "database_cache_bytes": {
+        "p50": 66968025.0,
+        "p95": 66968025.0,
+        "p99": 67022153.0,
+        "peak": 67042331.0
+      },
+      "database_memtable_bytes": {
+        "p50": 1311155.0,
+        "p95": 1311155.0,
+        "p99": 1311155.0,
+        "peak": 1311155.0
+      }
+    },
+    "rss_peak_kib": 1923328.0,
+    "phys_footprint_peak_bytes": 3482226744.0,
+    "diagnostics": {
+      "OutOfMemoryError": 0,
+      "Invalid Metal usage": 0,
+      "Vulkan mesh build failed": 0,
+      "Memory budget exceeded": 0,
+      "QA window unexpectedly became visible": 0,
+      "failed assertion": 0
+    },
+    "spec": {
+      "mode": "render",
+      "scenario": "refresh",
+      "backend": "vulkan",
+      "distance": 172,
+      "near_distance": 8,
+      "seconds": 150,
+      "width": 3440,
+      "height": 1440,
+      "legacy_fog": false,
+      "legacy_coverage": false,
+      "subdivision": 64.0,
+      "threads": 2,
+      "gpu_budget_mib": 768,
+      "hiz_enabled": false,
+      "auto_import": false,
+      "background": true,
+      "work_cadence_fps": 30,
+      "metal_validation": false
+    },
+    "performance_status": "functional verification only; no FPS comparison"
+  },
+  {
+    "name": "v4-release-pressure",
+    "exit": {
+      "exit_code": 0
+    },
+    "artifact": {
+      "name": "voxy-vulkan-0.2.20-vulkan.4+mc26.3-8bc3411.jar",
+      "sha256": "31a027fa335757dc6fbaabedbdccff5afdf1bb400358543993823130d6f88c3c"
+    },
+    "samples": 3279,
+    "duration": 110.029172458,
+    "focused_samples": 0,
+    "pressure_samples": 1047,
+    "heap_windows": {
+      "0": {
+        "heap_min": 521788136,
+        "heap_peak": 1006217480,
+        "gpu_peak": 133693440,
+        "samples": 3279
+      }
+    },
+    "gc_count": 15,
+    "gc_ms": 185,
+    "fields": {
+      "frame_ms": {
+        "p50": 33.527916,
+        "p95": 36.115458,
+        "p99": 37.683584,
+        "peak": 57.274917
+      },
+      "lod_cpu_ms": {
+        "p50": 0.07087500000000001,
+        "p95": 0.16454100000000002,
+        "p99": 0.29783400000000004,
+        "peak": 1.475375
+      },
+      "lod_gpu_ms": {
+        "p50": 0.117458,
+        "p95": 0.54225,
+        "p99": 0.853958,
+        "peak": 2.089625
+      },
+      "game_render_cpu_ms": {
+        "p50": 1.238917,
+        "p95": 2.070917,
+        "p99": 2.663125,
+        "peak": 7.104583
+      },
+      "game_render_gpu_ms": {
+        "p50": 3.9115,
+        "p95": 8.399167,
+        "p99": 9.925584,
+        "peak": 12.870542
+      },
+      "heap_used": {
+        "p50": 795210296.0,
+        "p95": 977662520.0,
+        "p99": 995731720.0,
+        "peak": 1006217480.0
+      },
+      "gpu_bytes": {
+        "p50": 113134784.0,
+        "p95": 133693440.0,
+        "p99": 133693440.0,
+        "peak": 133693440.0
+      },
+      "data_payload_bytes": {
+        "p50": 25726816.0,
+        "p95": 25726824.0,
+        "p99": 25726824.0,
+        "peak": 27107480.0
+      },
+      "geometry_pending_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 22128.0
+      },
+      "direct_buffer_bytes": {
+        "p50": 6522061.0,
+        "p95": 7998797.0,
+        "p99": 8367981.0,
+        "peak": 8367981.0
+      },
+      "mapped_buffer_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "database_cache_bytes": {
+        "p50": 7374969.0,
+        "p95": 7374969.0,
+        "p99": 7374969.0,
+        "peak": 7374969.0
+      },
+      "database_memtable_bytes": {
+        "p50": 1311155.0,
+        "p95": 1311155.0,
+        "p99": 1311155.0,
+        "peak": 1311155.0
+      }
+    },
+    "rss_peak_kib": 1885536.0,
+    "phys_footprint_peak_bytes": 2705477352.0,
+    "diagnostics": {
+      "OutOfMemoryError": 0,
+      "Invalid Metal usage": 0,
+      "Vulkan mesh build failed": 0,
+      "Memory budget exceeded": 0,
+      "QA window unexpectedly became visible": 0,
+      "failed assertion": 0
+    },
+    "spec": {
+      "mode": "render",
+      "scenario": "budget",
+      "backend": "vulkan",
+      "distance": 96,
+      "near_distance": 8,
+      "seconds": 110,
+      "width": 3440,
+      "height": 1440,
+      "legacy_fog": false,
+      "legacy_coverage": false,
+      "subdivision": 64.0,
+      "threads": 2,
+      "gpu_budget_mib": 128,
+      "hiz_enabled": false,
+      "auto_import": false,
+      "background": true,
+      "work_cadence_fps": 30,
+      "metal_validation": false
+    },
+    "performance_status": "functional verification only; no FPS comparison"
+  },
+  {
+    "name": "v4-release-fixed",
+    "exit": {
+      "exit_code": 0
+    },
+    "artifact": {
+      "name": "voxy-vulkan-0.2.20-vulkan.4+mc26.3-8bc3411.jar",
+      "sha256": "31a027fa335757dc6fbaabedbdccff5afdf1bb400358543993823130d6f88c3c"
+    },
+    "samples": 2379,
+    "duration": 80.01880925,
+    "focused_samples": 0,
+    "pressure_samples": 0,
+    "heap_windows": {
+      "0": {
+        "heap_min": 514450704,
+        "heap_peak": 1141173568,
+        "gpu_peak": 263624288,
+        "samples": 2379
+      }
+    },
+    "gc_count": 22,
+    "gc_ms": 209,
+    "fields": {
+      "frame_ms": {
+        "p50": 33.42275,
+        "p95": 35.785708,
+        "p99": 37.395375,
+        "peak": 45.84575
+      },
+      "lod_cpu_ms": {
+        "p50": 0.368208,
+        "p95": 1.105291,
+        "p99": 1.49771,
+        "peak": 13.636666
+      },
+      "lod_gpu_ms": {
+        "p50": 0.107583,
+        "p95": 0.24654199999999998,
+        "p99": 0.43441599999999997,
+        "peak": 2.836583
+      },
+      "game_render_cpu_ms": {
+        "p50": 1.1865,
+        "p95": 2.400292,
+        "p99": 3.619208,
+        "peak": 14.347917
+      },
+      "game_render_gpu_ms": {
+        "p50": 9.784375,
+        "p95": 11.416916,
+        "p99": 12.200959,
+        "peak": 14.876416
+      },
+      "heap_used": {
+        "p50": 956341200.0,
+        "p95": 1117821904.0,
+        "p99": 1132784960.0,
+        "peak": 1141173568.0
+      },
+      "gpu_bytes": {
+        "p50": 263624288.0,
+        "p95": 263624288.0,
+        "p99": 263624288.0,
+        "peak": 263624288.0
+      },
+      "data_payload_bytes": {
+        "p50": 67889208.0,
+        "p95": 68169768.0,
+        "p99": 68169768.0,
+        "peak": 69525152.0
+      },
+      "geometry_pending_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "direct_buffer_bytes": {
+        "p50": 6305597.0,
+        "p95": 7706941.0,
+        "p99": 7907133.0,
+        "peak": 7907133.0
+      },
+      "mapped_buffer_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "database_cache_bytes": {
+        "p50": 56290821.0,
+        "p95": 56290821.0,
+        "p99": 56290821.0,
+        "peak": 56290821.0
+      },
+      "database_memtable_bytes": {
+        "p50": 1311155.0,
+        "p95": 1311155.0,
+        "p99": 1311155.0,
+        "peak": 1311155.0
+      }
+    },
+    "rss_peak_kib": 1827456.0,
+    "phys_footprint_peak_bytes": 3428863936.0,
+    "diagnostics": {
+      "OutOfMemoryError": 0,
+      "Invalid Metal usage": 0,
+      "Vulkan mesh build failed": 0,
+      "Memory budget exceeded": 0,
+      "QA window unexpectedly became visible": 0,
+      "failed assertion": 0
+    },
+    "spec": {
+      "mode": "render",
+      "scenario": "static",
+      "backend": "vulkan",
+      "distance": 172,
+      "near_distance": 8,
+      "seconds": 80,
+      "width": 3440,
+      "height": 1440,
+      "legacy_fog": false,
+      "legacy_coverage": false,
+      "subdivision": 64.0,
+      "threads": 2,
+      "gpu_budget_mib": 768,
+      "hiz_enabled": false,
+      "auto_import": false,
+      "background": true,
+      "work_cadence_fps": 30,
+      "metal_validation": false
+    },
+    "performance_status": "functional verification only; no FPS comparison"
+  },
+  {
+    "name": "v4-release-lifecycle",
+    "exit": {
+      "exit_code": 0
+    },
+    "artifact": {
+      "name": "voxy-vulkan-0.2.20-vulkan.4+mc26.3-8bc3411.jar",
+      "sha256": "31a027fa335757dc6fbaabedbdccff5afdf1bb400358543993823130d6f88c3c"
+    },
+    "samples": 4452,
+    "duration": 149.968435458,
+    "focused_samples": 0,
+    "pressure_samples": 396,
+    "heap_windows": {
+      "0": {
+        "heap_min": 528952736,
+        "heap_peak": 1174549744,
+        "gpu_peak": 125261348,
+        "samples": 4452
+      }
+    },
+    "gc_count": 36,
+    "gc_ms": 488,
+    "fields": {
+      "frame_ms": {
+        "p50": 33.513792,
+        "p95": 36.341833,
+        "p99": 38.400667,
+        "peak": 285.609
+      },
+      "lod_cpu_ms": {
+        "p50": 0.063126,
+        "p95": 0.821541,
+        "p99": 2.207208,
+        "peak": 11.75125
+      },
+      "lod_gpu_ms": {
+        "p50": 0.292374,
+        "p95": 0.61575,
+        "p99": 0.920125,
+        "peak": 3.2662080000000002
+      },
+      "game_render_cpu_ms": {
+        "p50": 1.1905,
+        "p95": 2.240708,
+        "p99": 3.659583,
+        "peak": 32.180375
+      },
+      "game_render_gpu_ms": {
+        "p50": 6.031042,
+        "p95": 8.957167,
+        "p99": 10.607458,
+        "peak": 13.747
+      },
+      "heap_used": {
+        "p50": 906114288.0,
+        "p95": 1130488008.0,
+        "p99": 1157772528.0,
+        "peak": 1174549744.0
+      },
+      "gpu_bytes": {
+        "p50": 118047708.0,
+        "p95": 118096964.0,
+        "p99": 118096964.0,
+        "peak": 125064196.0
+      },
+      "data_payload_bytes": {
+        "p50": 51119304.0,
+        "p95": 55106264.0,
+        "p99": 63289432.0,
+        "peak": 68416256.0
+      },
+      "geometry_pending_bytes": {
+        "p50": 0.0,
+        "p95": 43936.0,
+        "p99": 2147608.0,
+        "peak": 2152896.0
+      },
+      "direct_buffer_bytes": {
+        "p50": 4404573.0,
+        "p95": 5603133.0,
+        "p99": 6403901.0,
+        "peak": 6604093.0
+      },
+      "mapped_buffer_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "database_cache_bytes": {
+        "p50": 31845316.0,
+        "p95": 31845316.0,
+        "p99": 31845316.0,
+        "peak": 31845316.0
+      },
+      "database_memtable_bytes": {
+        "p50": 1311155.0,
+        "p95": 1311155.0,
+        "p99": 1311155.0,
+        "peak": 1311155.0
+      }
+    },
+    "rss_peak_kib": 1648784.0,
+    "phys_footprint_peak_bytes": 3620130656.0,
+    "diagnostics": {
+      "OutOfMemoryError": 0,
+      "Invalid Metal usage": 0,
+      "Vulkan mesh build failed": 0,
+      "Memory budget exceeded": 0,
+      "QA window unexpectedly became visible": 0,
+      "failed assertion": 0
+    },
+    "spec": {
+      "mode": "render",
+      "scenario": "lifecycle",
+      "backend": "vulkan",
+      "distance": 172,
+      "near_distance": 8,
+      "seconds": 150,
+      "width": 3440,
+      "height": 1440,
+      "legacy_fog": false,
+      "legacy_coverage": false,
+      "subdivision": 64.0,
+      "threads": 2,
+      "gpu_budget_mib": 128,
+      "hiz_enabled": true,
+      "auto_import": false,
+      "background": true,
+      "work_cadence_fps": 30,
+      "metal_validation": false
+    },
+    "performance_status": "functional verification only; no FPS comparison"
+  },
+  {
+    "name": "v4-release-water",
+    "exit": {
+      "exit_code": 0
+    },
+    "artifact": {
+      "name": "voxy-vulkan-0.2.20-vulkan.4+mc26.3-8bc3411.jar",
+      "sha256": "31a027fa335757dc6fbaabedbdccff5afdf1bb400358543993823130d6f88c3c"
+    },
+    "samples": 2674,
+    "duration": 89.977339917,
+    "focused_samples": 0,
+    "pressure_samples": 0,
+    "heap_windows": {
+      "0": {
+        "heap_min": 532195648,
+        "heap_peak": 1157533376,
+        "gpu_peak": 296338960,
+        "samples": 2674
+      }
+    },
+    "gc_count": 23,
+    "gc_ms": 258,
+    "fields": {
+      "frame_ms": {
+        "p50": 33.429167,
+        "p95": 36.125208,
+        "p99": 38.08275,
+        "peak": 53.536125
+      },
+      "lod_cpu_ms": {
+        "p50": 0.073709,
+        "p95": 0.137708,
+        "p99": 0.189209,
+        "peak": 16.280291000000002
+      },
+      "lod_gpu_ms": {
+        "p50": 0.658207,
+        "p95": 0.9666669999999999,
+        "p99": 1.168958,
+        "peak": 1.331709
+      },
+      "game_render_cpu_ms": {
+        "p50": 1.20375,
+        "p95": 2.02225,
+        "p99": 2.508542,
+        "peak": 23.812333
+      },
+      "game_render_gpu_ms": {
+        "p50": 9.226708,
+        "p95": 11.160542,
+        "p99": 12.100209,
+        "peak": 15.045291
+      },
+      "heap_used": {
+        "p50": 920555200.0,
+        "p95": 1121881792.0,
+        "p99": 1147047616.0,
+        "peak": 1157533376.0
+      },
+      "gpu_bytes": {
+        "p50": 293169664.0,
+        "p95": 293169664.0,
+        "p99": 293169664.0,
+        "peak": 293169664.0
+      },
+      "data_payload_bytes": {
+        "p50": 68385152.0,
+        "p95": 68421688.0,
+        "p99": 68421688.0,
+        "peak": 70177488.0
+      },
+      "geometry_pending_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "direct_buffer_bytes": {
+        "p50": 6252861.0,
+        "p95": 8054589.0,
+        "p99": 8454973.0,
+        "peak": 8454973.0
+      },
+      "mapped_buffer_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "database_cache_bytes": {
+        "p50": 56113428.0,
+        "p95": 56113428.0,
+        "p99": 56113428.0,
+        "peak": 56113428.0
+      },
+      "database_memtable_bytes": {
+        "p50": 1311155.0,
+        "p95": 1311155.0,
+        "p99": 1311155.0,
+        "peak": 1311155.0
+      }
+    },
+    "rss_peak_kib": 1630176.0,
+    "phys_footprint_peak_bytes": 3422818192.0,
+    "diagnostics": {
+      "OutOfMemoryError": 0,
+      "Invalid Metal usage": 0,
+      "Vulkan mesh build failed": 0,
+      "Memory budget exceeded": 0,
+      "QA window unexpectedly became visible": 0,
+      "failed assertion": 0
+    },
+    "spec": {
+      "mode": "render",
+      "scenario": "static",
+      "backend": "vulkan",
+      "distance": 172,
+      "near_distance": 8,
+      "seconds": 90,
+      "width": 3440,
+      "height": 1440,
+      "legacy_fog": false,
+      "legacy_coverage": false,
+      "subdivision": 28.0,
+      "threads": 2,
+      "gpu_budget_mib": 768,
+      "hiz_enabled": false,
+      "auto_import": false,
+      "background": true,
+      "work_cadence_fps": 30,
+      "metal_validation": false
+    },
+    "performance_status": "functional verification only; no FPS comparison"
+  },
+  {
+    "name": "v4-release-underwater",
+    "exit": {
+      "exit_code": 0
+    },
+    "artifact": {
+      "name": "voxy-vulkan-0.2.20-vulkan.4+mc26.3-8bc3411.jar",
+      "sha256": "31a027fa335757dc6fbaabedbdccff5afdf1bb400358543993823130d6f88c3c"
+    },
+    "samples": 2675,
+    "duration": 89.986972875,
+    "focused_samples": 0,
+    "pressure_samples": 0,
+    "heap_windows": {
+      "0": {
+        "heap_min": 550921440,
+        "heap_peak": 1241176736,
+        "gpu_peak": 289118652,
+        "samples": 2675
+      }
+    },
+    "gc_count": 28,
+    "gc_ms": 265,
+    "fields": {
+      "frame_ms": {
+        "p50": 33.506917,
+        "p95": 36.30075,
+        "p99": 37.864208,
+        "peak": 46.673333
+      },
+      "lod_cpu_ms": {
+        "p50": 0.077,
+        "p95": 0.14675,
+        "p99": 0.343208,
+        "peak": 14.815833
+      },
+      "lod_gpu_ms": {
+        "p50": 0.6999170000000001,
+        "p95": 1.0226659999999999,
+        "p99": 1.29725,
+        "peak": 2.405126
+      },
+      "game_render_cpu_ms": {
+        "p50": 1.386125,
+        "p95": 2.376,
+        "p99": 5.476125,
+        "peak": 16.118792
+      },
+      "game_render_gpu_ms": {
+        "p50": 8.290167,
+        "p95": 10.820958,
+        "p99": 12.418375,
+        "peak": 19.622167
+      },
+      "heap_used": {
+        "p50": 950443688.0,
+        "p95": 1203428000.0,
+        "p99": 1228593824.0,
+        "peak": 1241176736.0
+      },
+      "gpu_bytes": {
+        "p50": 287307816.0,
+        "p95": 287307816.0,
+        "p99": 287307816.0,
+        "peak": 287307816.0
+      },
+      "data_payload_bytes": {
+        "p50": 70247856.0,
+        "p95": 70251640.0,
+        "p99": 70260392.0,
+        "peak": 72018456.0
+      },
+      "geometry_pending_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 12480.0
+      },
+      "direct_buffer_bytes": {
+        "p50": 6547773.0,
+        "p95": 8149309.0,
+        "p99": 8349501.0,
+        "peak": 8349501.0
+      },
+      "mapped_buffer_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "database_cache_bytes": {
+        "p50": 55924365.0,
+        "p95": 55924365.0,
+        "p99": 55924365.0,
+        "peak": 55924365.0
+      },
+      "database_memtable_bytes": {
+        "p50": 1311155.0,
+        "p95": 1311155.0,
+        "p99": 1311155.0,
+        "peak": 1311155.0
+      }
+    },
+    "rss_peak_kib": 1815360.0,
+    "phys_footprint_peak_bytes": 3506491352.0,
+    "diagnostics": {
+      "OutOfMemoryError": 0,
+      "Invalid Metal usage": 0,
+      "Vulkan mesh build failed": 0,
+      "Memory budget exceeded": 0,
+      "QA window unexpectedly became visible": 0,
+      "failed assertion": 0
+    },
+    "spec": {
+      "mode": "render",
+      "scenario": "static",
+      "backend": "vulkan",
+      "distance": 172,
+      "near_distance": 8,
+      "seconds": 90,
+      "width": 3440,
+      "height": 1440,
+      "legacy_fog": false,
+      "legacy_coverage": false,
+      "subdivision": 64.0,
+      "threads": 2,
+      "gpu_budget_mib": 768,
+      "hiz_enabled": true,
+      "auto_import": false,
+      "background": true,
+      "work_cadence_fps": 30,
+      "metal_validation": false
+    },
+    "performance_status": "functional verification only; no FPS comparison"
+  },
+  {
+    "name": "v4-release-metal",
+    "exit": {
+      "exit_code": 0
+    },
+    "artifact": {
+      "name": "voxy-vulkan-0.2.20-vulkan.4+mc26.3-8bc3411.jar",
+      "sha256": "31a027fa335757dc6fbaabedbdccff5afdf1bb400358543993823130d6f88c3c"
+    },
+    "samples": 2219,
+    "duration": 90.006373333,
+    "focused_samples": 0,
+    "pressure_samples": 0,
+    "heap_windows": {
+      "0": {
+        "heap_min": 538665944,
+        "heap_peak": 1192656120,
+        "gpu_peak": 295555192,
+        "samples": 2219
+      }
+    },
+    "gc_count": 25,
+    "gc_ms": 302,
+    "fields": {
+      "frame_ms": {
+        "p50": 41.20325,
+        "p95": 44.709959,
+        "p99": 49.775334,
+        "peak": 85.137042
+      },
+      "lod_cpu_ms": {
+        "p50": 0.053125000000000006,
+        "p95": 0.10216700000000001,
+        "p99": 0.186666,
+        "peak": 11.043831999999998
+      },
+      "lod_gpu_ms": {
+        "p50": 3.1640840000000003,
+        "p95": 4.375333,
+        "p99": 4.687709,
+        "peak": 5.608750000000001
+      },
+      "game_render_cpu_ms": {
+        "p50": 0.87125,
+        "p95": 1.242667,
+        "p99": 1.90125,
+        "peak": 12.056125
+      },
+      "game_render_gpu_ms": {
+        "p50": 41.099625,
+        "p95": 43.774125,
+        "p99": 44.948666,
+        "peak": 46.226583
+      },
+      "heap_used": {
+        "p50": 965457008.0,
+        "p95": 1159101688.0,
+        "p99": 1183560816.0,
+        "peak": 1192656120.0
+      },
+      "gpu_bytes": {
+        "p50": 292335244.0,
+        "p95": 292335244.0,
+        "p99": 292335244.0,
+        "peak": 292335244.0
+      },
+      "data_payload_bytes": {
+        "p50": 70256304.0,
+        "p95": 70270144.0,
+        "p99": 70270144.0,
+        "peak": 71812656.0
+      },
+      "geometry_pending_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "direct_buffer_bytes": {
+        "p50": 6358221.0,
+        "p95": 7900493.0,
+        "p99": 8269677.0,
+        "peak": 8269677.0
+      },
+      "mapped_buffer_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "database_cache_bytes": {
+        "p50": 56363658.0,
+        "p95": 56363658.0,
+        "p99": 56363658.0,
+        "peak": 56363658.0
+      },
+      "database_memtable_bytes": {
+        "p50": 1311155.0,
+        "p95": 1311155.0,
+        "p99": 1311155.0,
+        "peak": 1311155.0
+      }
+    },
+    "rss_peak_kib": 1932416.0,
+    "phys_footprint_peak_bytes": 3735490736.0,
+    "diagnostics": {
+      "OutOfMemoryError": 0,
+      "Invalid Metal usage": 0,
+      "Vulkan mesh build failed": 0,
+      "Memory budget exceeded": 0,
+      "QA window unexpectedly became visible": 0,
+      "failed assertion": 0
+    },
+    "spec": {
+      "mode": "render",
+      "scenario": "static",
+      "backend": "vulkan",
+      "distance": 172,
+      "near_distance": 8,
+      "seconds": 90,
+      "width": 3440,
+      "height": 1440,
+      "legacy_fog": false,
+      "legacy_coverage": false,
+      "subdivision": 64.0,
+      "threads": 2,
+      "gpu_budget_mib": 768,
+      "hiz_enabled": false,
+      "auto_import": false,
+      "background": true,
+      "work_cadence_fps": 30,
+      "metal_validation": true
+    },
+    "performance_status": "functional verification only; no FPS comparison"
+  },
+  {
+    "name": "v4-release-bsl",
+    "exit": {
+      "exit_code": 0
+    },
+    "artifact": {
+      "name": "voxy-vulkan-0.2.20-vulkan.4+mc26.3-8bc3411.jar",
+      "sha256": "31a027fa335757dc6fbaabedbdccff5afdf1bb400358543993823130d6f88c3c"
+    },
+    "samples": 3249,
+    "duration": 109.984229292,
+    "focused_samples": 0,
+    "pressure_samples": 0,
+    "heap_windows": {
+      "0": {
+        "heap_min": 573859616,
+        "heap_peak": 1229442640,
+        "gpu_peak": 302145592,
+        "samples": 3249
+      }
+    },
+    "gc_count": 31,
+    "gc_ms": 346,
+    "fields": {
+      "frame_ms": {
+        "p50": 33.568458,
+        "p95": 36.18625,
+        "p99": 38.414416,
+        "peak": 80.588458
+      },
+      "lod_cpu_ms": {
+        "p50": 7.204541,
+        "p95": 10.700667000000001,
+        "p99": 14.364959,
+        "peak": 30.684625
+      },
+      "lod_gpu_ms": {
+        "p50": 0.6100840000000001,
+        "p95": 0.8875,
+        "p99": 1.078334,
+        "peak": 1.322876
+      },
+      "game_render_cpu_ms": {
+        "p50": 8.597166,
+        "p95": 13.470583,
+        "p99": 19.036291,
+        "peak": 37.178458
+      },
+      "game_render_gpu_ms": {
+        "p50": 19.513375,
+        "p95": 22.689083,
+        "p99": 24.110917,
+        "peak": 26.486375
+      },
+      "heap_used": {
+        "p50": 978101712.0,
+        "p95": 1196042784.0,
+        "p99": 1221054032.0,
+        "peak": 1229442640.0
+      },
+      "gpu_bytes": {
+        "p50": 296803284.0,
+        "p95": 296803284.0,
+        "p99": 296803284.0,
+        "peak": 302145592.0
+      },
+      "data_payload_bytes": {
+        "p50": 68399072.0,
+        "p95": 68399072.0,
+        "p99": 68399072.0,
+        "peak": 68399072.0
+      },
+      "geometry_pending_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "direct_buffer_bytes": {
+        "p50": 5161101.0,
+        "p95": 6084061.0,
+        "p99": 6084061.0,
+        "peak": 6268653.0
+      },
+      "mapped_buffer_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "database_cache_bytes": {
+        "p50": 56120083.0,
+        "p95": 56120083.0,
+        "p99": 56120083.0,
+        "peak": 56120083.0
+      },
+      "database_memtable_bytes": {
+        "p50": 1311155.0,
+        "p95": 1311155.0,
+        "p99": 1311155.0,
+        "peak": 1311155.0
+      }
+    },
+    "rss_peak_kib": 1856832.0,
+    "phys_footprint_peak_bytes": 4024373232.0,
+    "diagnostics": {
+      "OutOfMemoryError": 0,
+      "Invalid Metal usage": 0,
+      "Vulkan mesh build failed": 0,
+      "Memory budget exceeded": 0,
+      "QA window unexpectedly became visible": 0,
+      "failed assertion": 0
+    },
+    "spec": {
+      "mode": "render",
+      "scenario": "turns",
+      "backend": "vulkan",
+      "distance": 172,
+      "near_distance": 8,
+      "seconds": 110,
+      "width": 3440,
+      "height": 1440,
+      "legacy_fog": false,
+      "legacy_coverage": false,
+      "subdivision": 64.0,
+      "threads": 2,
+      "gpu_budget_mib": 768,
+      "hiz_enabled": false,
+      "auto_import": false,
+      "background": true,
+      "work_cadence_fps": 30,
+      "metal_validation": false
+    },
+    "performance_status": "functional verification only; no FPS comparison"
+  },
+  {
+    "name": "v4-release-bsl-lifecycle",
+    "exit": {
+      "exit_code": 0
+    },
+    "artifact": {
+      "name": "voxy-vulkan-0.2.20-vulkan.4+mc26.3-8bc3411.jar",
+      "sha256": "31a027fa335757dc6fbaabedbdccff5afdf1bb400358543993823130d6f88c3c"
+    },
+    "samples": 5022,
+    "duration": 170.031602458,
+    "focused_samples": 0,
+    "pressure_samples": 0,
+    "heap_windows": {
+      "0": {
+        "heap_min": 574869328,
+        "heap_peak": 1310040872,
+        "gpu_peak": 296572676,
+        "samples": 5022
+      }
+    },
+    "gc_count": 57,
+    "gc_ms": 745,
+    "fields": {
+      "frame_ms": {
+        "p50": 33.470583,
+        "p95": 36.052584,
+        "p99": 42.193083,
+        "peak": 403.912959
+      },
+      "lod_cpu_ms": {
+        "p50": 0.073708,
+        "p95": 6.6264579999999995,
+        "p99": 10.072707999999999,
+        "peak": 36.139958
+      },
+      "lod_gpu_ms": {
+        "p50": 0.6379999999999999,
+        "p95": 0.934916,
+        "p99": 1.153916,
+        "peak": 1.9260000000000002
+      },
+      "game_render_cpu_ms": {
+        "p50": 2.29025,
+        "p95": 8.3045,
+        "p99": 12.430417,
+        "peak": 37.791833
+      },
+      "game_render_gpu_ms": {
+        "p50": 21.804042,
+        "p95": 23.995209,
+        "p99": 25.587834,
+        "peak": 29.530708
+      },
+      "heap_used": {
+        "p50": 1000814912.0,
+        "p95": 1239514184.0,
+        "p99": 1278729392.0,
+        "peak": 1310040872.0
+      },
+      "gpu_bytes": {
+        "p50": 292279676.0,
+        "p95": 293505604.0,
+        "p99": 293505604.0,
+        "peak": 296572676.0
+      },
+      "data_payload_bytes": {
+        "p50": 68933608.0,
+        "p95": 69176960.0,
+        "p99": 69199776.0,
+        "peak": 71939184.0
+      },
+      "geometry_pending_bytes": {
+        "p50": 0.0,
+        "p95": 108384.0,
+        "p99": 609544.0,
+        "peak": 1531408.0
+      },
+      "direct_buffer_bytes": {
+        "p50": 5420381.0,
+        "p95": 6284093.0,
+        "p99": 9971389.0,
+        "peak": 10171581.0
+      },
+      "mapped_buffer_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "database_cache_bytes": {
+        "p50": 56138382.0,
+        "p95": 56138382.0,
+        "p99": 56138382.0,
+        "peak": 56138382.0
+      },
+      "database_memtable_bytes": {
+        "p50": 1311155.0,
+        "p95": 1311155.0,
+        "p99": 1311155.0,
+        "peak": 1311155.0
+      }
+    },
+    "rss_peak_kib": 1904368.0,
+    "phys_footprint_peak_bytes": 4526739848.0,
+    "diagnostics": {
+      "OutOfMemoryError": 0,
+      "Invalid Metal usage": 0,
+      "Vulkan mesh build failed": 0,
+      "Memory budget exceeded": 0,
+      "QA window unexpectedly became visible": 0,
+      "failed assertion": 0
+    },
+    "spec": {
+      "mode": "render",
+      "scenario": "lifecycle",
+      "backend": "vulkan",
+      "distance": 172,
+      "near_distance": 8,
+      "seconds": 170,
+      "width": 3440,
+      "height": 1440,
+      "legacy_fog": false,
+      "legacy_coverage": false,
+      "subdivision": 64.0,
+      "threads": 2,
+      "gpu_budget_mib": 768,
+      "hiz_enabled": false,
+      "auto_import": false,
+      "background": true,
+      "work_cadence_fps": 30,
+      "metal_validation": false
+    },
+    "performance_status": "functional verification only; no FPS comparison"
+  },
+  {
+    "name": "v4-final-water",
+    "exit": {
+      "exit_code": 0
+    },
+    "artifact": {
+      "name": "voxy-vulkan-0.2.20-vulkan.4+mc26.3-8bc3411.jar",
+      "sha256": "769695af2ddc6c886302e46f780064323bd4afe4be2f905bbfe27433ff51b830"
+    },
+    "samples": 2676,
+    "duration": 89.969807542,
+    "focused_samples": 0,
+    "pressure_samples": 0,
+    "heap_windows": {
+      "0": {
+        "heap_min": 533711200,
+        "heap_peak": 1172270088,
+        "gpu_peak": 295464220,
+        "samples": 2676
+      }
+    },
+    "gc_count": 23,
+    "gc_ms": 225,
+    "fields": {
+      "frame_ms": {
+        "p50": 33.452,
+        "p95": 36.247375,
+        "p99": 37.611167,
+        "peak": 48.54425
+      },
+      "lod_cpu_ms": {
+        "p50": 0.07025,
+        "p95": 0.126333,
+        "p99": 0.200207,
+        "peak": 17.196
+      },
+      "lod_gpu_ms": {
+        "p50": 0.6676679999999999,
+        "p95": 0.980708,
+        "p99": 1.116792,
+        "peak": 1.3416249999999998
+      },
+      "game_render_cpu_ms": {
+        "p50": 1.162042,
+        "p95": 1.910167,
+        "p99": 2.620458,
+        "peak": 18.014667
+      },
+      "game_render_gpu_ms": {
+        "p50": 9.081833,
+        "p95": 11.056667,
+        "p99": 12.390208,
+        "peak": 57.883625
+      },
+      "heap_used": {
+        "p50": 912223240.0,
+        "p95": 1130327048.0,
+        "p99": 1159687176.0,
+        "peak": 1172270088.0
+      },
+      "gpu_bytes": {
+        "p50": 292562560.0,
+        "p95": 292562560.0,
+        "p99": 292562560.0,
+        "peak": 292562560.0
+      },
+      "data_payload_bytes": {
+        "p50": 68944336.0,
+        "p95": 68944384.0,
+        "p99": 68945440.0,
+        "peak": 70577144.0
+      },
+      "geometry_pending_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "direct_buffer_bytes": {
+        "p50": 6157245.0,
+        "p95": 7633981.0,
+        "p99": 7818573.0,
+        "peak": 7818573.0
+      },
+      "mapped_buffer_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "database_cache_bytes": {
+        "p50": 56150108.0,
+        "p95": 56150108.0,
+        "p99": 56150108.0,
+        "peak": 56150108.0
+      },
+      "database_memtable_bytes": {
+        "p50": 1311155.0,
+        "p95": 1311155.0,
+        "p99": 1311155.0,
+        "peak": 1311155.0
+      }
+    },
+    "rss_peak_kib": 1810032.0,
+    "phys_footprint_peak_bytes": 3610234792.0,
+    "diagnostics": {
+      "OutOfMemoryError": 0,
+      "Invalid Metal usage": 0,
+      "Vulkan mesh build failed": 0,
+      "Memory budget exceeded": 0,
+      "QA window unexpectedly became visible": 0,
+      "failed assertion": 0
+    },
+    "spec": {
+      "mode": "render",
+      "scenario": "static",
+      "backend": "vulkan",
+      "distance": 172,
+      "near_distance": 8,
+      "seconds": 90,
+      "width": 3440,
+      "height": 1440,
+      "legacy_fog": false,
+      "legacy_coverage": false,
+      "subdivision": 64.0,
+      "threads": 2,
+      "gpu_budget_mib": 768,
+      "hiz_enabled": false,
+      "auto_import": false,
+      "background": true,
+      "work_cadence_fps": 30,
+      "metal_validation": false
+    },
+    "performance_status": "functional verification only; no FPS comparison"
+  },
+  {
+    "name": "v4-final-underwater",
+    "exit": {
+      "exit_code": 0
+    },
+    "artifact": {
+      "name": "voxy-vulkan-0.2.20-vulkan.4+mc26.3-8bc3411.jar",
+      "sha256": "769695af2ddc6c886302e46f780064323bd4afe4be2f905bbfe27433ff51b830"
+    },
+    "samples": 2676,
+    "duration": 90.019431666,
+    "focused_samples": 0,
+    "pressure_samples": 0,
+    "heap_windows": {
+      "0": {
+        "heap_min": 550500104,
+        "heap_peak": 1231701520,
+        "gpu_peak": 287925640,
+        "samples": 2676
+      }
+    },
+    "gc_count": 28,
+    "gc_ms": 289,
+    "fields": {
+      "frame_ms": {
+        "p50": 33.431292,
+        "p95": 36.579917,
+        "p99": 38.588292,
+        "peak": 86.321917
+      },
+      "lod_cpu_ms": {
+        "p50": 0.07870799999999999,
+        "p95": 0.143291,
+        "p99": 0.23591700000000002,
+        "peak": 7.3209159999999995
+      },
+      "lod_gpu_ms": {
+        "p50": 0.716417,
+        "p95": 1.0431679999999999,
+        "p99": 1.283333,
+        "peak": 1.867126
+      },
+      "game_render_cpu_ms": {
+        "p50": 1.37675,
+        "p95": 2.286541,
+        "p99": 3.358375,
+        "peak": 12.42775
+      },
+      "game_render_gpu_ms": {
+        "p50": 8.611209,
+        "p95": 11.238875,
+        "p99": 12.731958,
+        "peak": 15.468542
+      },
+      "heap_used": {
+        "p50": 977051504.0,
+        "p95": 1195155312.0,
+        "p99": 1219118608.0,
+        "peak": 1231701520.0
+      },
+      "gpu_bytes": {
+        "p50": 286114804.0,
+        "p95": 286114804.0,
+        "p99": 286114804.0,
+        "peak": 286114804.0
+      },
+      "data_payload_bytes": {
+        "p50": 70524760.0,
+        "p95": 70534056.0,
+        "p99": 70534056.0,
+        "peak": 72003872.0
+      },
+      "geometry_pending_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "direct_buffer_bytes": {
+        "p50": 6105405.0,
+        "p95": 7907133.0,
+        "p99": 8307517.0,
+        "peak": 8307517.0
+      },
+      "mapped_buffer_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "database_cache_bytes": {
+        "p50": 55507455.0,
+        "p95": 55507455.0,
+        "p99": 55507455.0,
+        "peak": 55507455.0
+      },
+      "database_memtable_bytes": {
+        "p50": 1311155.0,
+        "p95": 1311155.0,
+        "p99": 1311155.0,
+        "peak": 1311155.0
+      }
+    },
+    "rss_peak_kib": 1803408.0,
+    "phys_footprint_peak_bytes": 3488927656.0,
+    "diagnostics": {
+      "OutOfMemoryError": 0,
+      "Invalid Metal usage": 0,
+      "Vulkan mesh build failed": 0,
+      "Memory budget exceeded": 0,
+      "QA window unexpectedly became visible": 0,
+      "failed assertion": 0
+    },
+    "spec": {
+      "mode": "render",
+      "scenario": "static",
+      "backend": "vulkan",
+      "distance": 172,
+      "near_distance": 8,
+      "seconds": 90,
+      "width": 3440,
+      "height": 1440,
+      "legacy_fog": false,
+      "legacy_coverage": false,
+      "subdivision": 64.0,
+      "threads": 2,
+      "gpu_budget_mib": 768,
+      "hiz_enabled": true,
+      "auto_import": false,
+      "background": true,
+      "work_cadence_fps": 30,
+      "metal_validation": false
+    },
+    "performance_status": "functional verification only; no FPS comparison"
+  },
+  {
+    "name": "v4-final-metal",
+    "exit": {
+      "exit_code": 0
+    },
+    "artifact": {
+      "name": "voxy-vulkan-0.2.20-vulkan.4+mc26.3-8bc3411.jar",
+      "sha256": "769695af2ddc6c886302e46f780064323bd4afe4be2f905bbfe27433ff51b830"
+    },
+    "samples": 2226,
+    "duration": 90.019442583,
+    "focused_samples": 0,
+    "pressure_samples": 0,
+    "heap_windows": {
+      "0": {
+        "heap_min": 552254680,
+        "heap_peak": 1270131440,
+        "gpu_peak": 292980384,
+        "samples": 2226
+      }
+    },
+    "gc_count": 28,
+    "gc_ms": 322,
+    "fields": {
+      "frame_ms": {
+        "p50": 41.188,
+        "p95": 44.72525,
+        "p99": 49.608417,
+        "peak": 91.931209
+      },
+      "lod_cpu_ms": {
+        "p50": 0.052958,
+        "p95": 0.124874,
+        "p99": 0.300458,
+        "peak": 13.955290999999999
+      },
+      "lod_gpu_ms": {
+        "p50": 2.987,
+        "p95": 4.372833,
+        "p99": 4.950375,
+        "peak": 5.492
+      },
+      "game_render_cpu_ms": {
+        "p50": 0.855916,
+        "p95": 1.557166,
+        "p99": 3.472291,
+        "peak": 15.803375
+      },
+      "game_render_gpu_ms": {
+        "p50": 40.985708,
+        "p95": 43.630084,
+        "p99": 44.903625,
+        "peak": 46.064458
+      },
+      "heap_used": {
+        "p50": 951364336.0,
+        "p95": 1232312792.0,
+        "p99": 1257548528.0,
+        "peak": 1270131440.0
+      },
+      "gpu_bytes": {
+        "p50": 289807664.0,
+        "p95": 289807664.0,
+        "p99": 289807664.0,
+        "peak": 289807664.0
+      },
+      "data_payload_bytes": {
+        "p50": 69459464.0,
+        "p95": 69459472.0,
+        "p99": 69460552.0,
+        "peak": 71058208.0
+      },
+      "geometry_pending_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 29520.0
+      },
+      "direct_buffer_bytes": {
+        "p50": 7460317.0,
+        "p95": 9306237.0,
+        "p99": 9490829.0,
+        "peak": 9490829.0
+      },
+      "mapped_buffer_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "database_cache_bytes": {
+        "p50": 56239983.0,
+        "p95": 56239983.0,
+        "p99": 56239983.0,
+        "peak": 56239983.0
+      },
+      "database_memtable_bytes": {
+        "p50": 1311155.0,
+        "p95": 1311155.0,
+        "p99": 1311155.0,
+        "peak": 1311155.0
+      }
+    },
+    "rss_peak_kib": 1762992.0,
+    "phys_footprint_peak_bytes": 3865792736.0,
+    "diagnostics": {
+      "OutOfMemoryError": 0,
+      "Invalid Metal usage": 0,
+      "Vulkan mesh build failed": 0,
+      "Memory budget exceeded": 0,
+      "QA window unexpectedly became visible": 0,
+      "failed assertion": 0
+    },
+    "spec": {
+      "mode": "render",
+      "scenario": "static",
+      "backend": "vulkan",
+      "distance": 172,
+      "near_distance": 8,
+      "seconds": 90,
+      "width": 3440,
+      "height": 1440,
+      "legacy_fog": false,
+      "legacy_coverage": false,
+      "subdivision": 64.0,
+      "threads": 2,
+      "gpu_budget_mib": 768,
+      "hiz_enabled": false,
+      "auto_import": false,
+      "background": true,
+      "work_cadence_fps": 30,
+      "metal_validation": true
+    },
+    "performance_status": "functional verification only; no FPS comparison"
+  },
+  {
+    "name": "v4-final-bsl",
+    "exit": {
+      "exit_code": 0
+    },
+    "artifact": {
+      "name": "voxy-vulkan-0.2.20-vulkan.4+mc26.3-8bc3411.jar",
+      "sha256": "769695af2ddc6c886302e46f780064323bd4afe4be2f905bbfe27433ff51b830"
+    },
+    "samples": 2952,
+    "duration": 99.974339583,
+    "focused_samples": 0,
+    "pressure_samples": 0,
+    "heap_windows": {
+      "0": {
+        "heap_min": 570079248,
+        "heap_peak": 1263868424,
+        "gpu_peak": 296805148,
+        "samples": 2952
+      }
+    },
+    "gc_count": 29,
+    "gc_ms": 379,
+    "fields": {
+      "frame_ms": {
+        "p50": 33.452875,
+        "p95": 35.976625,
+        "p99": 38.269875,
+        "peak": 49.280208
+      },
+      "lod_cpu_ms": {
+        "p50": 0.071708,
+        "p95": 0.138626,
+        "p99": 0.285874,
+        "peak": 14.503083
+      },
+      "lod_gpu_ms": {
+        "p50": 0.6408750000000001,
+        "p95": 0.900083,
+        "p99": 1.0995,
+        "peak": 2.087667
+      },
+      "game_render_cpu_ms": {
+        "p50": 2.192167,
+        "p95": 3.438083,
+        "p99": 5.791333,
+        "peak": 16.372792
+      },
+      "game_render_gpu_ms": {
+        "p50": 22.040166,
+        "p95": 23.889958,
+        "p99": 25.14825,
+        "peak": 27.548833
+      },
+      "heap_used": {
+        "p50": 965703944.0,
+        "p95": 1214033080.0,
+        "p99": 1244994056.0,
+        "peak": 1263868424.0
+      },
+      "gpu_bytes": {
+        "p50": 293102848.0,
+        "p95": 293102848.0,
+        "p99": 293102848.0,
+        "peak": 293102848.0
+      },
+      "data_payload_bytes": {
+        "p50": 68658272.0,
+        "p95": 68706136.0,
+        "p99": 68706136.0,
+        "peak": 71856880.0
+      },
+      "geometry_pending_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 26336.0
+      },
+      "direct_buffer_bytes": {
+        "p50": 6984093.0,
+        "p95": 8436797.0,
+        "p99": 8645421.0,
+        "peak": 8645421.0
+      },
+      "mapped_buffer_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "database_cache_bytes": {
+        "p50": 56329335.0,
+        "p95": 56329335.0,
+        "p99": 56329335.0,
+        "peak": 56329335.0
+      },
+      "database_memtable_bytes": {
+        "p50": 1311155.0,
+        "p95": 1311155.0,
+        "p99": 1311155.0,
+        "peak": 1311155.0
+      }
+    },
+    "rss_peak_kib": 1709952.0,
+    "phys_footprint_peak_bytes": 4098183200.0,
+    "diagnostics": {
+      "OutOfMemoryError": 0,
+      "Invalid Metal usage": 0,
+      "Vulkan mesh build failed": 0,
+      "Memory budget exceeded": 0,
+      "QA window unexpectedly became visible": 0,
+      "failed assertion": 0
+    },
+    "spec": {
+      "mode": "render",
+      "scenario": "static",
+      "backend": "vulkan",
+      "distance": 172,
+      "near_distance": 8,
+      "seconds": 100,
+      "width": 3440,
+      "height": 1440,
+      "legacy_fog": false,
+      "legacy_coverage": false,
+      "subdivision": 64.0,
+      "threads": 2,
+      "gpu_budget_mib": 768,
+      "hiz_enabled": false,
+      "auto_import": false,
+      "background": true,
+      "work_cadence_fps": 30,
+      "metal_validation": false
+    },
+    "performance_status": "functional verification only; no FPS comparison"
+  },
+  {
+    "name": "v4-final-bsl-lifecycle",
+    "exit": {
+      "exit_code": 0
+    },
+    "artifact": {
+      "name": "voxy-vulkan-0.2.20-vulkan.4+mc26.3-8bc3411.jar",
+      "sha256": "769695af2ddc6c886302e46f780064323bd4afe4be2f905bbfe27433ff51b830"
+    },
+    "samples": 5002,
+    "duration": 170.021884709,
+    "focused_samples": 0,
+    "pressure_samples": 0,
+    "heap_windows": {
+      "0": {
+        "heap_min": 572646104,
+        "heap_peak": 1307697624,
+        "gpu_peak": 297465560,
+        "samples": 5002
+      }
+    },
+    "gc_count": 58,
+    "gc_ms": 1122,
+    "fields": {
+      "frame_ms": {
+        "p50": 33.5015,
+        "p95": 36.367084,
+        "p99": 41.004584,
+        "peak": 444.191375
+      },
+      "lod_cpu_ms": {
+        "p50": 0.073374,
+        "p95": 8.377416,
+        "p99": 12.414834,
+        "peak": 49.923041
+      },
+      "lod_gpu_ms": {
+        "p50": 0.638875,
+        "p95": 0.9143739999999999,
+        "p99": 1.1129580000000001,
+        "peak": 5.805584
+      },
+      "game_render_cpu_ms": {
+        "p50": 2.370083,
+        "p95": 10.325042,
+        "p99": 16.168208,
+        "peak": 122.209584
+      },
+      "game_render_gpu_ms": {
+        "p50": 21.740417,
+        "p95": 23.949542,
+        "p99": 25.055625,
+        "peak": 28.310584
+      },
+      "heap_used": {
+        "p50": 1035292544.0,
+        "p95": 1242628976.0,
+        "p99": 1278337496.0,
+        "peak": 1307697624.0
+      },
+      "gpu_bytes": {
+        "p50": 293683260.0,
+        "p95": 294257396.0,
+        "p99": 294257396.0,
+        "peak": 297465560.0
+      },
+      "data_payload_bytes": {
+        "p50": 68661600.0,
+        "p95": 68911672.0,
+        "p99": 68937632.0,
+        "peak": 70142624.0
+      },
+      "geometry_pending_bytes": {
+        "p50": 0.0,
+        "p95": 113496.0,
+        "p99": 660880.0,
+        "peak": 1687736.0
+      },
+      "direct_buffer_bytes": {
+        "p50": 5551453.0,
+        "p95": 7037613.0,
+        "p99": 7960573.0,
+        "peak": 8145165.0
+      },
+      "mapped_buffer_bytes": {
+        "p50": 0.0,
+        "p95": 0.0,
+        "p99": 0.0,
+        "peak": 0.0
+      },
+      "database_cache_bytes": {
+        "p50": 56601306.0,
+        "p95": 56601306.0,
+        "p99": 56601306.0,
+        "peak": 56601306.0
+      },
+      "database_memtable_bytes": {
+        "p50": 1311155.0,
+        "p95": 1311155.0,
+        "p99": 1311155.0,
+        "peak": 1311155.0
+      }
+    },
+    "rss_peak_kib": 1801328.0,
+    "phys_footprint_peak_bytes": 4544778656.0,
+    "diagnostics": {
+      "OutOfMemoryError": 0,
+      "Invalid Metal usage": 0,
+      "Vulkan mesh build failed": 0,
+      "Memory budget exceeded": 0,
+      "QA window unexpectedly became visible": 0,
+      "failed assertion": 0
+    },
+    "spec": {
+      "mode": "render",
+      "scenario": "lifecycle",
+      "backend": "vulkan",
+      "distance": 172,
+      "near_distance": 8,
+      "seconds": 170,
+      "width": 3440,
+      "height": 1440,
+      "legacy_fog": false,
+      "legacy_coverage": false,
+      "subdivision": 64.0,
+      "threads": 2,
+      "gpu_budget_mib": 768,
+      "hiz_enabled": false,
+      "auto_import": false,
+      "background": true,
+      "work_cadence_fps": 30,
+      "metal_validation": false
+    },
+    "performance_status": "functional verification only; no FPS comparison"
+  }
+]

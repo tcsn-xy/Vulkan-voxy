@@ -42,5 +42,6 @@
   "voxy.command.no_region": "找不到当前维度的区域文件目录",
   "voxy.import.title": "Voxy 存档导入",
   "voxy.import.progress": "Voxy 导入：%s / %s 区块",
-  "voxy.import.completed": "Voxy 导入完成，用时 %s 秒，平均每秒 %s 区块"
+  "voxy.import.completed": "Voxy 导入完成，用时 %s 秒，平均每秒 %s 区块",
+  "voxy.command.refresh_started": "正在刷新当前存档的远景缓存；本次游玩中的探索更新仍优先。"
 }

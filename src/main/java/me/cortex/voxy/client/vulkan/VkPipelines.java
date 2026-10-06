@@ -26,8 +26,8 @@ public final class VkPipelines implements AutoCloseable {
             int result=vkCreatePipelineCache(VulkanInterop.device().vkDevice(),cacheInfo,null,handle);
             if(result!=VK_SUCCESS){cacheInfo.pInitialData(null);VulkanInterop.check(vkCreatePipelineCache(VulkanInterop.device().vkDevice(),cacheInfo,null,handle),"pipeline cache");}
             cache=handle.get(0);if(data!=null)org.lwjgl.system.MemoryUtil.memFree(data);
-            var bindings=VkDescriptorSetLayoutBinding.calloc(15,s);
-            for(int i=0;i<15;i++) bindings.get(i).binding(i).descriptorCount(1).descriptorType(i==9?VK_DESCRIPTOR_TYPE_STORAGE_IMAGE:(i>=5&&i<=7?VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:VK_DESCRIPTOR_TYPE_STORAGE_BUFFER)).stageFlags(VK_SHADER_STAGE_ALL);
+            var bindings=VkDescriptorSetLayoutBinding.calloc(16,s);
+            for(int i=0;i<16;i++) bindings.get(i).binding(i).descriptorCount(1).descriptorType(i==9?VK_DESCRIPTOR_TYPE_STORAGE_IMAGE:((i>=5&&i<=7)||i==15?VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:VK_DESCRIPTOR_TYPE_STORAGE_BUFFER)).stageFlags(VK_SHADER_STAGE_ALL);
             var dci=VkDescriptorSetLayoutCreateInfo.calloc(s).sType$Default().flags(VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR).pBindings(bindings);
             var out=s.mallocLong(1);VulkanInterop.check(vkCreateDescriptorSetLayout(VulkanInterop.device().vkDevice(),dci,null,out),"descriptor layout");descriptorLayout=out.get(0);
             var range=VkPushConstantRange.calloc(1,s).stageFlags(VK_SHADER_STAGE_ALL).offset(0).size(128);
@@ -78,8 +78,8 @@ public final class VkPipelines implements AutoCloseable {
         var viewport=VkPipelineViewportStateCreateInfo.calloc(s).sType$Default().viewportCount(1).scissorCount(1);
         var raster=VkPipelineRasterizationStateCreateInfo.calloc(s).sType$Default().polygonMode(VK_POLYGON_MODE_FILL).cullMode(VK_CULL_MODE_NONE).frontFace(VK_FRONT_FACE_COUNTER_CLOCKWISE).lineWidth(1);
         var samples=VkPipelineMultisampleStateCreateInfo.calloc(s).sType$Default().rasterizationSamples(VK_SAMPLE_COUNT_1_BIT);
-        var ds=VkPipelineDepthStencilStateCreateInfo.calloc(s).sType$Default().depthTestEnable(true).depthWriteEnable(!blend).depthCompareOp(VK_COMPARE_OP_GREATER_OR_EQUAL);
-        var attach=VkPipelineColorBlendAttachmentState.calloc(1,s).colorWriteMask(15).blendEnable(blend).srcColorBlendFactor(VK_BLEND_FACTOR_SRC_ALPHA).dstColorBlendFactor(VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA).colorBlendOp(VK_BLEND_OP_ADD).srcAlphaBlendFactor(VK_BLEND_FACTOR_ONE).dstAlphaBlendFactor(VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA).alphaBlendOp(VK_BLEND_OP_ADD);
+        var ds=VkPipelineDepthStencilStateCreateInfo.calloc(s).sType$Default().depthTestEnable(true).depthWriteEnable(true).depthCompareOp(VK_COMPARE_OP_GREATER_OR_EQUAL);
+        var attach=VkPipelineColorBlendAttachmentState.calloc(1,s);attach.get(0).colorWriteMask(15).blendEnable(blend).srcColorBlendFactor(VK_BLEND_FACTOR_SRC_ALPHA).dstColorBlendFactor(VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA).colorBlendOp(VK_BLEND_OP_ADD).srcAlphaBlendFactor(VK_BLEND_FACTOR_ONE).dstAlphaBlendFactor(VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA).alphaBlendOp(VK_BLEND_OP_ADD);
         var blending=VkPipelineColorBlendStateCreateInfo.calloc(s).sType$Default().pAttachments(attach);
         var dynamic=VkPipelineDynamicStateCreateInfo.calloc(s).sType$Default().pDynamicStates(s.ints(VK_DYNAMIC_STATE_VIEWPORT,VK_DYNAMIC_STATE_SCISSOR));
         var rendering=VkPipelineRenderingCreateInfo.calloc(s).sType$Default().pColorAttachmentFormats(s.ints(VulkanConst.toVk(colour))).depthAttachmentFormat(VulkanConst.toVk(depth));

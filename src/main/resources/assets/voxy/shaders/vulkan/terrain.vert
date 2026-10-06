@@ -6,7 +6,7 @@ layout(set=0,binding=2,std430) readonly buffer Colours {uint colours[];};
 layout(set=0,binding=3,std430) readonly buffer Sections {Section sections[];};
 layout(set=0,binding=12,std430) readonly buffer OriginIds {uint originIds[];};
 layout(set=0,binding=13,std430) readonly buffer Origins {ivec4 origins[];};
-layout(set=0,binding=14,std430) readonly buffer IndexStream {uvec4 expandedQuads[];};
+layout(set=0,binding=14,std430) readonly buffer IndexStream {uint expandedQuads[];};
 layout(set=0,binding=6) uniform sampler2D lightmap;
 layout(push_constant) uniform Frame {mat4 mvp;vec4 camera;uvec4 params;vec4 fog;ivec4 coverage;} frame;
 invariant gl_Position;
@@ -21,10 +21,12 @@ void main(){
     uint vertex=uint(gl_VertexIndex),quad=reference?vertex/6u:vertex/4u;
     uvec2 q;ivec4 origin;
     if(!fallback){
-        uvec4 packed=expandedQuads[uint(gl_InstanceIndex)];q=packed.xy;
-        if((q.y&0x80000000u)!=0u){gl_Position=vec4(0,0,2,1);uv=vec2(0);attributes=uvec4(0);lighting=0u;localPos=vec3(0);return;}
-        origin=ivec4(int(packed.z<<16u)>>16,int(packed.w<<4u)>>4,int(packed.z)>>16,int(packed.w>>28u));
-    }else{q=quads[quad];origin=origins[originIds[quad]];origin.xyz-=frame.coverage.xyz;}
+        uint at=expandedQuads[uint(gl_InstanceIndex)];
+        if(at==0xffffffffu){gl_Position=vec4(0,0,2,1);uv=vec2(0);attributes=uvec4(0);lighting=0u;localPos=vec3(0);return;}
+        quad=at;
+    }
+    q=quads[quad];origin=origins[originIds[quad]];origin.xyz-=frame.coverage.xyz;
+
     uint face=q.x&7u,axis=face>>1u,id=(q.x>>26u)|((q.y&1023u)<<6u);
     uint fd=modelData[id*16u+face],flags=modelData[id*16u+6u],tint=modelData[id*16u+7u];
     uvec2 size=uvec2((q.x>>3u)&15u,(q.x>>7u)&15u)+1u;
@@ -43,13 +45,13 @@ void main(){
         if(back){gl_Position=vec4(0,0,2,1);uv=vec2(0);attributes=uvec4(0);lighting=0u;return;}
     }
     gl_Position=frame.mvp*vec4(localPos-frame.camera.xyz,1);gl_Position.z=max(gl_Position.z,0.0000001);
-    uv=begin+extent*mask;
+    uv=begin+extent*mask;if((flags&32u)!=0u&&face==1u)uv*=scale;
     uint biome=(q.y>>14u)&511u;lighting=((q.y>>23u)&255u)|(((flags&8u)!=0u)?256u:0u);
     // Metal may flatten conditional loads; make the address safe even for constant tints (-1).
     uint lutIndex=(flags&2u)!=0u?tint+biome:0u;
     uint biomeTint=colours[min(lutIndex,65535u)];
     if((flags&2u)!=0u)tint=biomeTint;
     uint discardFlag=(fd>>22u)&1u;discardFlag|=uint(any(greaterThan(size,uvec2(1))))&((fd>>23u)&1u);
-    attributes=uvec4(id,face,discardFlag|(((fd>>24u)&3u)<<2u)|(((flags>>2u)&1u)<<4u),tint);
+    attributes=uvec4(id,face,discardFlag|(((fd>>24u)&3u)<<2u)|(((flags>>2u)&1u)<<4u)|(((flags>>5u)&1u)<<5u),tint);
 
 }

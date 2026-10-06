@@ -25,7 +25,7 @@ public final class VulkanMeshService implements AutoCloseable {
         boolean requiresBuild(){return !ready||builtVersion!=version.get();}
     }
     public record Result(Node node,long version,BuiltSection section,long bytes,MeshClusters.Cluster[] clusters) {}
-    public record View(double x,double y,double z,int radiusBlocks,float subdivision,int height,int minY,int maxY,DistantFrustum frustum) {}
+    public record View(double x,double y,double z,int radiusBlocks,float subdivision,int height,int minY,int maxY) {}
     private final WorldEngine world;
     private final ModelBakerySubsystem bakery;
     private final Service meshService,selectService;
@@ -45,10 +45,16 @@ public final class VulkanMeshService implements AutoCloseable {
     public volatile double selectionMillis;
     private final int maxNodes, maxMeshes;
     private volatile boolean geometryPressure;
+    private final RefinementBudget refinementBudget;
+    private volatile it.unimi.dsi.fastutil.longs.LongSet retained=new it.unimi.dsi.fastutil.longs.LongOpenHashSet();
+    private volatile int rootCount;
+    private long lastPressure,lastRecovery;
     public volatile boolean coarseSelection;
     private long lastSelect;
+    private final AtomicLong selectionRequests=new AtomicLong(1);
+    private volatile long handledSelection;
     public VulkanMeshService(WorldEngine world,ModelBakerySubsystem bakery,ServiceManager manager,int maxMeshes,int rootCapacity){
-        this.world=world;this.bakery=bakery;this.maxMeshes=maxMeshes;maxNodes=Math.max(maxMeshes,rootCapacity)*4;
+        this.world=world;this.bakery=bakery;this.maxMeshes=maxMeshes;refinementBudget=new RefinementBudget(maxMeshes);maxNodes=Math.max(maxMeshes,rootCapacity)*4;
         meshService=manager.createService(()->{
             var mesher=new RenderDataFactory(world,bakery.factory,false);
             return new Pair<>(()->build(mesher),mesher::free);
@@ -63,14 +69,18 @@ public final class VulkanMeshService implements AutoCloseable {
             }
         });
     }
-    private void invalidate(long key){var n=nodes.get(key);if(n!=null){n.version.incrementAndGet();n.retryAfter=0;enqueue(n);}}
+    private void invalidate(long key){selectionRequests.incrementAndGet();var n=nodes.get(key);if(n!=null){n.version.incrementAndGet();n.retryAfter=0;enqueue(n);}}
     public Collection<Node> nodes(){return nodes.values();}
     public Node node(long key){return nodes.get(key);}
     public int pending(){return pending.get();}
     public long pendingBytes(){return pendingBytes.get();}
     public void setGeometryPressure(boolean pressure){geometryPressure=pressure;}
+    public boolean protectedNode(Node n){return WorldEngine.getLevel(n.key)==WorldEngine.MAX_LOD_LAYER||retained.contains(n.key);}
+    public void easePressure(){long now=System.nanoTime();if(now-lastRecovery>1_000_000_000L){int before=refinementBudget.limit();refinementBudget.recover();if(before!=refinementBudget.limit())selectionRequests.incrementAndGet();lastRecovery=now;}}
+
     public void update(View latest){
-        view=latest;
+        if(!latest.equals(view)){view=latest;selectionRequests.incrementAndGet();}
+        if(handledSelection==selectionRequests.get())return;
         long now=System.nanoTime();
         if(now-lastSelect<50_000_000)return;
         if(selecting.compareAndSet(false,true)){lastSelect=now;selectService.execute();}
@@ -85,7 +95,7 @@ public final class VulkanMeshService implements AutoCloseable {
             long version=n.version.get();
             meshBuilds.incrementAndGet();
             var section=world.acquireIfExists(n.key);
-            if(section==null){missingBuilds.incrementAndGet();if(n.mesh==null)n.ready=true;n.builtVersion=version;n.children=0;n.retryAfter=System.nanoTime()+1_000_000_000;return;}
+            if(section==null){missingBuilds.incrementAndGet();if(n.mesh==null)n.ready=true;n.builtVersion=version;n.children=0;selectionRequests.incrementAndGet();n.retryAfter=System.nanoTime()+1_000_000_000;return;}
             try{
                 var built=mesher.generateMesh(section);
                 MeshClusters.Cluster[] clusters=new MeshClusters.Cluster[0];
@@ -102,14 +112,14 @@ public final class VulkanMeshService implements AutoCloseable {
         catch(Throwable e){failure=e;Logger.error("Vulkan mesh build failed for "+WorldEngine.pprintPos(n.key),e);}
         finally{if(n.finishBuild(published))pending.decrementAndGet();}
     }
-    public void consumed(Result result){pendingBytes.addAndGet(-result.bytes());result.section().free();if(result.node().finishBuild(false))pending.decrementAndGet();}
+    public void consumed(Result result){selectionRequests.incrementAndGet();pendingBytes.addAndGet(-result.bytes());result.section().free();if(result.node().finishBuild(false))pending.decrementAndGet();}
     private Node get(long key){
         var n=nodes.get(key);if(n!=null)return n;
         if(nodes.size()>=maxNodes)return null;
         return nodes.computeIfAbsent(key,Node::new);
     }
     private void select(){
-        long started=System.nanoTime();
+        long started=System.nanoTime(),request=selectionRequests.get();
         try{
             var v=view;if(!live||v==null)return;
             var roots=new ArrayList<Node>();
@@ -128,10 +138,20 @@ public final class VulkanMeshService implements AutoCloseable {
                     roots.add(n);
                 }
             }
-            boolean coarse=geometryPressure;
-            var out=coarse?roots:LodCoverage.select(roots,maxMeshes,n->refinementPriority(n,v),this::readyChildren);
+            rootCount=roots.size();
+            var out=LodCoverage.select(roots,refinementBudget.limit(),n->refinementPriority(n,v),this::readyChildren,n->Integer.bitCount(n.children));
             long[] keys=new long[out.size()];for(int i=0;i<keys.length;i++)keys[i]=out.get(i).key;
-            if(!Arrays.equals(selected,keys))selected=keys;coarseSelection=coarse;
+            if(!Arrays.equals(selected,keys)){
+                var protectedKeys=new it.unimi.dsi.fastutil.longs.LongOpenHashSet(keys.length*2);
+                for(long key:keys){
+                    protectedKeys.add(key);
+                    for(int level=WorldEngine.getLevel(key)+1,x=WorldEngine.getX(key),y=WorldEngine.getY(key),z=WorldEngine.getZ(key);level<=WorldEngine.MAX_LOD_LAYER;level++){
+                        x>>=1;y>>=1;z>>=1;protectedKeys.add(WorldEngine.getWorldSectionId(level,x,y,z));
+                    }
+                }
+                retained=protectedKeys;selected=keys;
+            }
+            coarseSelection=refinementBudget.reduced();handledSelection=request;
         }catch(Throwable e){failure=e;Logger.error("Vulkan LOD selection failed",e);}finally{selectionMillis=(System.nanoTime()-started)/1e6;selecting.set(false);}
     }
     private void touch(Node n){
@@ -140,14 +160,7 @@ public final class VulkanMeshService implements AutoCloseable {
     }
     private double refinementPriority(Node n,View v){
         if(!n.ready||n.children==0)return 0;
-        int level=WorldEngine.getLevel(n.key);if(level==0)return 0;
-        int size=32<<level;
-        int x=WorldEngine.getX(n.key),y=WorldEngine.getY(n.key),z=WorldEngine.getZ(n.key);
-        if(!v.frustum().intersects(x*(double)size-v.x(),y*(double)size-v.y(),z*(double)size-v.z(),size))return 0;
-        double dx=x*(double)size+size*.5-v.x(),dy=y*(double)size+size*.5-v.y(),dz=z*(double)size+size*.5-v.z();
-        double distance=Math.max(1,Math.sqrt(dx*dx+dy*dy+dz*dz)-size*.866);
-        double score=size*v.height()/distance;
-        return score>v.subdivision()?score:0;
+        return LodWorkingSet.priority(WorldEngine.getLevel(n.key),WorldEngine.getX(n.key),WorldEngine.getY(n.key),WorldEngine.getZ(n.key),v.x(),v.y(),v.z(),v.height(),v.subdivision());
     }
     private List<Node> readyChildren(Node n){
         int level=WorldEngine.getLevel(n.key),x=WorldEngine.getX(n.key),y=WorldEngine.getY(n.key),z=WorldEngine.getZ(n.key);
@@ -160,18 +173,22 @@ public final class VulkanMeshService implements AutoCloseable {
         return ready?children:null;
     }
     public void reclaimRefinements(VulkanGeometry geometry){
-        if(!geometryPressure||!coarseSelection)return;
-        // The published coarse selection and in-flight draws keep their parent meshes.
-        for(var n:nodes.values())if(WorldEngine.getLevel(n.key)<WorldEngine.MAX_LOD_LAYER&&n.mesh!=null){
-            geometry.retire(n.mesh);reclamationRevision.incrementAndGet();n.mesh=null;n.drawEntries=null;n.ready=false;n.version.incrementAndGet();
-        }
+        if(!geometryPressure)return;
+        long now=System.nanoTime();
+        if(now-lastPressure>250_000_000L){if(refinementBudget.pressure(rootCount))selectionRequests.incrementAndGet();lastPressure=now;}
+        // Keep the published frontier and its ready parents. Retire only obsolete refinements.
+        var candidates=new ArrayList<Node>();for(var n:nodes.values())if(n.mesh!=null&&!protectedNode(n)&&!n.queued.get())candidates.add(n);
+        var v=view;if(v==null)return;
+        candidates.sort(Comparator.<Node>comparingDouble(n->{int size=32<<WorldEngine.getLevel(n.key);double x=WorldEngine.getX(n.key)*(double)size+size*.5-v.x(),z=WorldEngine.getZ(n.key)*(double)size+size*.5-v.z();return x*x+z*z;}).reversed());
+        long released=0;
+        for(var n:candidates){var m=n.mesh;if(m==null)continue;geometry.retire(m);released+=m.bytes();reclamationRevision.incrementAndGet();n.mesh=null;n.drawEntries=null;n.ready=false;n.version.incrementAndGet();if(released>=VulkanGeometry.PAGE_BYTES/4)break;}
     }
     public void evictUnvisited(VulkanGeometry geometry){
         // Spare GPU budget is a cache, not a reason to discard meshes every five seconds.
         // Keeping recently viewed refinements avoids coarse placeholders on repeated turns.
         if(nodes.size()<maxNodes&&!geometryPressure&&geometry.availableBytes()>=2L*VulkanGeometry.PAGE_BYTES)return;
         long cutoff=System.nanoTime()-(nodes.size()>=maxNodes?500_000_000L:5_000_000_000L);
-        for(var n:nodes.values())if(n.lastVisit<cutoff&&!n.queued.get())if(nodes.remove(n.key,n)){if(n.mesh!=null){geometry.retire(n.mesh);reclamationRevision.incrementAndGet();n.mesh=null;}}
+        for(var n:nodes.values())if(n.lastVisit<cutoff&&!n.queued.get()&&!protectedNode(n))if(nodes.remove(n.key,n)){if(n.mesh!=null){geometry.retire(n.mesh);reclamationRevision.incrementAndGet();n.mesh=null;}}
     }
     @Override public void close(){
         live=false;world.setDirtyCallback(null);selectService.shutdown();meshService.shutdown();

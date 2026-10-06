@@ -65,6 +65,10 @@ public final class DataStorageHarness {
                 first.iteratePositions(0, key -> positions.incrementAndGet());
                 second.iteratePositions(0, key -> positions.incrementAndGet());
                 if (positions.get() != 1000) throw new AssertionError("Stored-position iteration lost data");
+                Path checkpoint=root.resolve("checkpoint");first.createCheckpoint(checkpoint);write(first,1000);
+                var saved=new SectionSerializationStorage(new RocksDBStorageBackend(checkpoint.toString()));
+                try{read(saved,0);var missing=raw(1000);try{if(saved.loadSection(missing)==0)throw new AssertionError("Refresh backup includes later writes");}finally{missing.release();}}
+                finally{saved.close();}
                 if (peakBlocks > DataMemoryBudget.DATABASE_CACHE.limitBytes() || peakWrites > DataMemoryBudget.DATABASE_MEMTABLES.limitBytes()) throw new AssertionError("Native cache capacity exceeded");
             } finally { first.close(); second.close(); }
             if (DataMemoryBudget.DATABASE_CACHE.usedBytes() != 0 || DataMemoryBudget.DATABASE_MEMTABLES.usedBytes() != 0) throw new AssertionError("Shared native reservations leaked at close");

@@ -17,7 +17,7 @@ public final class VulkanGeometry implements AutoCloseable {
         boolean ensureIndices(GpuBudget budget,int required){
             if(required<=indexCapacity)return true;
             int capacity=Math.min(PAGE_BYTES/8,Math.max(required,Math.max(4096,indexCapacity+indexCapacity/2)));
-            long bytes=(long)capacity*16;
+            long bytes=QuadStream.bytes(capacity);
             if(budget.remaining()<bytes)return false;
             var next=new VulkanBuffer(budget,bytes,VK_BUFFER_USAGE_STORAGE_BUFFER_BIT|VK_BUFFER_USAGE_INDEX_BUFFER_BIT,false);
             if(indices!=null)indices.close();indices=next;indexCapacity=capacity;return true;

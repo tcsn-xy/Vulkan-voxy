@@ -45,7 +45,7 @@ public final class VulkanModels implements ModelUploadSink,AutoCloseable {
         var cb=VulkanInterop.encoder().allocateAndBeginTransientCommandBuffer();
         models.update(cb,id*64L,MemoryUtil.memByteBuffer(model.address,64));
         if(biomeIndex>=0&&biome!=null)colours.update(cb,biomeIndex*4L,MemoryUtil.memByteBuffer(biome.address,Math.toIntExact(biome.size)));
-        VkPipelines.barrier(cb,VK_PIPELINE_STAGE_TRANSFER_BIT,VK_ACCESS_TRANSFER_WRITE_BIT,VK_PIPELINE_STAGE_VERTEX_SHADER_BIT,VK_ACCESS_SHADER_READ_BIT);
+        VkPipelines.barrier(cb,VK_PIPELINE_STAGE_TRANSFER_BIT,VK_ACCESS_TRANSFER_WRITE_BIT,VK_PIPELINE_STAGE_VERTEX_SHADER_BIT|VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,VK_ACCESS_SHADER_READ_BIT);
         VulkanInterop.endAndExecute(cb);
         if(Boolean.getBoolean("voxy.qa.dumpModels")&&id<64){
             try(var image=new com.mojang.blaze3d.platform.NativeImage(48,32,false)){
@@ -66,7 +66,7 @@ public final class VulkanModels implements ModelUploadSink,AutoCloseable {
         var cb=VulkanInterop.encoder().allocateAndBeginTransientCommandBuffer();
         colours.update(cb,0,MemoryUtil.memByteBuffer(coloursIn.address,Math.toIntExact(coloursIn.size)));
         for(long p=pairs.address;p<pairs.address+pairs.size;p+=8){long v=MemoryUtil.memGetLong(p);models.update(cb,(v&0xffffffffL)*64+28,MemoryUtil.memByteBuffer(p+4,4));}
-        VkPipelines.barrier(cb,VK_PIPELINE_STAGE_TRANSFER_BIT,VK_ACCESS_TRANSFER_WRITE_BIT,VK_PIPELINE_STAGE_VERTEX_SHADER_BIT,VK_ACCESS_SHADER_READ_BIT);
+        VkPipelines.barrier(cb,VK_PIPELINE_STAGE_TRANSFER_BIT,VK_ACCESS_TRANSFER_WRITE_BIT,VK_PIPELINE_STAGE_VERTEX_SHADER_BIT|VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,VK_ACCESS_SHADER_READ_BIT);
         VulkanInterop.endAndExecute(cb);
     }
     @Override public void close(){models.close();colours.close();view.close();atlas.close();VulkanInterop.encoder().queueForDestroy(()->budget.release(atlasBytes));}

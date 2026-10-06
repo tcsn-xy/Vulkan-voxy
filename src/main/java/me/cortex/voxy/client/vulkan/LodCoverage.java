@@ -10,6 +10,9 @@ final class LodCoverage {
 
     static <T> List<T> select(List<T> roots, int limit, ToDoubleFunction<T> priority,
                               Function<T, List<T>> readyChildren) {
+        return select(roots,limit,priority,readyChildren,n->0);
+    }
+    static <T> List<T> select(List<T> roots,int limit,ToDoubleFunction<T> priority,Function<T,List<T>> readyChildren,java.util.function.ToIntFunction<T> childCount){
         // A manual refinement limit must never remove the outer coarse coverage.
         int capacity = Math.max(limit, roots.size());
         var frontier = new LinkedHashSet<>(roots);
@@ -24,6 +27,7 @@ final class LodCoverage {
         while (!queue.isEmpty()) {
             var candidate = queue.remove();
             if (!frontier.contains(candidate.node())) continue;
+            if((long)frontier.size()-1+childCount.applyAsInt(candidate.node())>capacity)continue;
             var children = readyChildren.apply(candidate.node());
             if (children == null || children.isEmpty()) continue;
             if ((long) frontier.size() - 1 + children.size() > capacity) continue;

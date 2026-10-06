@@ -40,10 +40,14 @@ public final class VulkanInterop {
     public static VulkanCommandEncoder encoder() {return device().createCommandEncoder();}
     public static long submitIndex() {return ((VulkanEncoderAccessor)encoder()).voxy$submitIndex();}
     public static VkCommandBuffer commands(RenderPass pass) {
-        var backend=((FrontendPassAccessor)pass).voxy$backend();
+        var backend=((FrontendPassAccessor)VitrailCompat.unwrap(pass)).voxy$backend();
         return ((VulkanPassAccessor)backend).voxy$commandBuffer();
     }
+    public static boolean canPrepareExternalCommands(){VitrailCompat.suspendOwnedPass();return ((VulkanEncoderAccessor)encoder()).voxy$currentRenderPass()==null;}
+    public static void prepareExternalCommands(){ExternalCommands.prepare(VitrailCompat::suspendOwnedPass,()->((VulkanEncoderAccessor)encoder()).voxy$currentRenderPass()!=null);}
+    public static void invalidate(RenderPass pass){((FrontendPassAccessor)VitrailCompat.unwrap(pass)).voxy$invalidatePipeline(null);}
     public static void endAndExecute(VkCommandBuffer cb) {
+        prepareExternalCommands();
         check(org.lwjgl.vulkan.VK10.vkEndCommandBuffer(cb),"end command buffer");
         encoder().execute(cb);
     }

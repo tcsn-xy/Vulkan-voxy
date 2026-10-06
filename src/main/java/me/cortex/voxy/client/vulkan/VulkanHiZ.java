@@ -63,6 +63,7 @@ public final class VulkanHiZ implements AutoCloseable {
         ci.subresourceRange().aspectMask(VK_IMAGE_ASPECT_COLOR_BIT).baseMipLevel(mip).levelCount(count).baseArrayLayer(0).layerCount(1);
         var out=s.mallocLong(1);VulkanInterop.check(vkCreateImageView(VulkanInterop.device().vkDevice(),ci,null,out),"HiZ view");return out.get(0);
     }}
+    public void invalidate(){valid=false;}
     public boolean canUse(CameraRenderState camera){return valid&&Math.abs(camera.pos.x()-lastX)<.00001&&Math.abs(camera.pos.y()-lastY)<.00001&&Math.abs(camera.pos.z()-lastZ)<.00001&&lastMvp.equals(new Matrix4f(camera.projectionMatrix).mul(camera.viewRotationMatrix),.000001f);}
     public void reduce(VkPipelines pipelines,RenderTarget target,long sampler,CameraRenderState camera,OccluderMask mask){
         if(closed)return;

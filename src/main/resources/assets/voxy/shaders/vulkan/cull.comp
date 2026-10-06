@@ -16,7 +16,7 @@ struct Draw {uint indexCount;uint instanceCount;uint firstIndex;int vertexOffset
 layout(set=0,binding=4,std430) buffer Commands {Draw draws[];};
 layout(set=0,binding=7) uniform sampler2D hiz;
 layout(set=0,binding=11,std430) buffer Diagnostics {uint stats[];};
-layout(set=0,binding=14,std430) writeonly buffer IndexStream {uvec4 expandedQuads[];};
+layout(set=0,binding=14,std430) writeonly buffer IndexStream {uint expandedQuads[];};
 layout(push_constant) uniform Frame {mat4 mvp;vec4 camera;uvec4 params;vec4 fog;ivec4 coverage;} frame;
 shared uint starts[8],counts[8],prefixes[8],opaqueBase,transparentBase,rawTransparent,packedOriginXZ,packedOriginY;
 shared bool surviving,probing;
@@ -110,29 +110,29 @@ void main(){
     if((mode&4u)!=0u)return;
     barrier();
     for(uint q=thread;q<rawTransparent;q+=64u){
-        uvec2 raw=quads[starts[0]+q];if(!surviving||((mode&8u)!=0u&&!canRaster(raw)))raw.y|=0x80000000u;
-        expandedQuads[transparentBase+q]=uvec4(raw,packedOriginXZ,packedOriginY);
+        uint at=starts[0]+q;uvec2 raw=quads[at];
+        expandedQuads[transparentBase+q]=!surviving||((mode&8u)!=0u&&!canRaster(raw))?0xffffffffu:at;
     }
     if(!surviving)return;
     if((mode&8u)==0u){
-        for(uint group=1u;group<8u;group++)for(uint q=thread;q<counts[group];q+=64u)expandedQuads[opaqueBase+prefixes[group]+q]=uvec4(quads[starts[group]+q],packedOriginXZ,packedOriginY);
+        for(uint group=1u;group<8u;group++)for(uint q=thread;q<counts[group];q+=64u)expandedQuads[opaqueBase+prefixes[group]+q]=starts[group]+q;
         return;
     }
     for(uint batch=0u;batch<rawOpaque;batch+=64u){
-        uint candidate=batch+thread;bool alive=false;uvec2 raw=uvec2(0);
-        if(candidate<rawOpaque){uint group=1u;while(group<7u&&candidate>=prefixes[group]+counts[group])group++;raw=quads[starts[group]+candidate-prefixes[group]];alive=canRaster(raw);}
+        uint candidate=batch+thread,quadIndex=0u;bool alive=false;uvec2 raw=uvec2(0);
+        if(candidate<rawOpaque){uint group=1u;while(group<7u&&candidate>=prefixes[group]+counts[group])group++;quadIndex=starts[group]+candidate-prefixes[group];raw=quads[quadIndex];alive=canRaster(raw);}
         #ifdef VOXY_USE_SUBGROUP_BALLOT
         uvec4 mask=subgroupBallot(alive);uint rank=subgroupBallotExclusiveBitCount(mask);
         if(subgroupElect())localCounts[gl_SubgroupID]=subgroupBallotBitCount(mask);
         barrier();
         if(thread==0u){uint total=0u;for(uint s=0u;s<gl_NumSubgroups;s++){localBases[s]=total;total+=localCounts[s];}if(probing)atomicAdd(stats[7],total);batchBase=total>0u?uint(draws[opaqueBucket].vertexOffset)+atomicAdd(draws[opaqueBucket].instanceCount,total):0u;}
         barrier();
-        if(alive)expandedQuads[batchBase+localBases[gl_SubgroupID]+rank]=uvec4(raw,packedOriginXZ,packedOriginY);
+        if(alive)expandedQuads[batchBase+localBases[gl_SubgroupID]+rank]=quadIndex;
         #else
         localCounts[thread]=uint(alive);barrier();
         if(thread==0u){uint total=0u;for(uint s=0u;s<64u;s++){localBases[s]=total;total+=localCounts[s];}if(probing)atomicAdd(stats[7],total);batchBase=total>0u?uint(draws[opaqueBucket].vertexOffset)+atomicAdd(draws[opaqueBucket].instanceCount,total):0u;}
         barrier();
-        if(alive)expandedQuads[batchBase+localBases[thread]]=uvec4(raw,packedOriginXZ,packedOriginY);
+        if(alive)expandedQuads[batchBase+localBases[thread]]=quadIndex;
         #endif
         barrier();
     }
